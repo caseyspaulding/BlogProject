@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace BlogProject.Models
 {
-    public class Blog
+    public class Blog  //Will be blog table
     {
         public int Id { get; set; }//Primary Key for Blog Table
-        public string AuthorId { get; set; } //Foreign key
+        public string BlogUserId { get; set; } //Foreign key
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 2)]
@@ -41,7 +41,7 @@ namespace BlogProject.Models
 
 
         //Navagation Property
-        public virtual IdentityUser Author { get; set; }
+        public virtual BlogUser BlogUser { get; set; }
         public virtual ICollection<Post> Posts { get; set; } = new HashSet<Post>();
 
 

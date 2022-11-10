@@ -10,12 +10,11 @@ using System.Threading.Tasks;
 
 namespace BlogProject.Models
 {
-    public class Post
+    public class Post   //This will be the Post table in db
     {
         public int Id { get; set; } //id for records in a column -- this is primary key 
-
         public int BlogId { get; set; } //primary key in Blog table
-        public string AuthorId { get; set; }
+        public string BlogUserId { get; set; }
 
         [Required]
         [StringLength(75, ErrorMessage = "The {0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
@@ -49,7 +48,7 @@ namespace BlogProject.Models
 
         //Nav Property
         public virtual Blog Blog { get; set; }
-        public virtual IdentityUser Author { get; set; }
+        public virtual BlogUser BlogUser { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();

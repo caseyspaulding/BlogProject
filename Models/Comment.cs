@@ -12,7 +12,7 @@ namespace BlogProject.Models
     {
         public int Id { get; set; }
         public int PostId { get; set; } //forgiegn key
-        public string AuthorId { get; set; } // foreign key
+        public string BlogUserId { get; set; } // foreign key
         public string ModeratorId { get; set; } //foreign key
 
         [Required]
@@ -34,7 +34,7 @@ namespace BlogProject.Models
 
         //Navigation properties
         public virtual Post Post { get; set; }
-        public virtual IdentityUser Author { get; set; }
-        public virtual IdentityUser Moderator { get; set; }
+        public virtual BlogUser BlogUser { get; set; }
+        public virtual BlogUser Moderator { get; set; }
     }
 }
