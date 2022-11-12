@@ -86,6 +86,10 @@ namespace BlogProject.Services
                 LastName = "Spaulding",
                 EmailConfirmed = true
             };
+
+            await _userManager.CreateAsync(modUser, "NavyChief1893!!");
+            await _userManager.AddToRoleAsync(modUser, BlogRole.Moderator.ToString());
+
         }
 
 
