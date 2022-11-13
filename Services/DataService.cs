@@ -2,6 +2,7 @@
 using BlogProject.Enums;
 using BlogProject.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace BlogProject.Services
 
         public async Task ManageDateAsync()
         {
+            //Task: Create the DB from the Migrations
+            await _dbContext.Database.MigrateAsync();
+            
             // Task 1: Seed a few Roles into the system
             await SeedRolesAsync();
 
@@ -61,16 +65,17 @@ namespace BlogProject.Services
             var adminUser = new BlogUser()
             {
                 Email = "casey.spaulding@me.com",
-                UserName = "casey.spaulding@me.com,",
-                FirstName = "Casey",
-                LastName = "Spaulding",
+                UserName = "casey8981",
+                FirstName = "Casey1",
+                LastName = "Spaulding1",
+                DisplayName = "Casey Spaulding",
                 EmailConfirmed = true,
 
             };
 
             //Step 2: Use the UserManager to create a new user that is defined by adminUser
 
-            await _userManager.CreateAsync(adminUser, "NavyChief1893!!");
+            await _userManager.CreateAsync(adminUser, "NavyChief1893!");
 
             //Step 3; Add this new user to the Administrator role
 
@@ -81,9 +86,10 @@ namespace BlogProject.Services
             var modUser = new BlogUser()
             {
                 Email = "casey.spaulding@me.com",
-                UserName = "casey.spaulding@me.com",
+                UserName = "casey8981",
                 FirstName = "Casey",
                 LastName = "Spaulding",
+                DisplayName = "Casey Spaulding",
                 EmailConfirmed = true
             };
 
