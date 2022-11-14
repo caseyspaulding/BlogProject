@@ -65,9 +65,9 @@ namespace BlogProject.Services
             var adminUser = new BlogUser()
             {
                 Email = "casey.spaulding@me.com",
-                UserName = "casey8981",
-                FirstName = "Casey1",
-                LastName = "Spaulding1",
+                UserName = "casey.spaulding@me.com",
+                FirstName = "Casey",
+                LastName = "Spaulding",
                 DisplayName = "Casey Spaulding",
                 EmailConfirmed = true,
 
@@ -75,7 +75,7 @@ namespace BlogProject.Services
 
             //Step 2: Use the UserManager to create a new user that is defined by adminUser
 
-            await _userManager.CreateAsync(adminUser, "NavyChief1893!");
+            await _userManager.CreateAsync(adminUser, "NavyChief1893!!");
 
             //Step 3; Add this new user to the Administrator role
 
@@ -85,11 +85,11 @@ namespace BlogProject.Services
             //Step 1 repeat: Create the moderator user
             var modUser = new BlogUser()
             {
-                Email = "casey.spaulding@me.com",
-                UserName = "casey8981",
-                FirstName = "Casey",
-                LastName = "Spaulding",
-                DisplayName = "Casey Spaulding",
+                Email = "AndrewRussell@me.com",
+                UserName = "AndrewRussell@me.com",
+                FirstName = "Andrew",
+                LastName = "Russell",
+                DisplayName = "Andrew Russell",
                 EmailConfirmed = true
             };
 

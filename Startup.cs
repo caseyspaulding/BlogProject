@@ -57,6 +57,10 @@ namespace BlogProject
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<IBlogEmailSender, EmailService>();
 
+            //Register our Image Service
+            services.AddScoped<IImageService, BasicImageService>();
+
+
 
         }
 

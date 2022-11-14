@@ -19,7 +19,8 @@ namespace BlogProject
             var host = CreateHostBuilder(args).Build();
 
             //Pull out my registered DataService
-            var dataService = host.Services.CreateScope()
+            var dataService = host.Services
+                                    .CreateScope()
                                    .ServiceProvider
                                    .GetRequiredService<DataService>();
 

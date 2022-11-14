@@ -24,7 +24,6 @@ namespace BlogProject.Areas.Identity.Pages.Account
         private readonly SignInManager<BlogUser> _signInManager;
         private readonly UserManager<BlogUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        //private readonly IEmailSender _emailSender;
         private readonly IBlogEmailSender _emailSender;
 
         public RegisterModel(
