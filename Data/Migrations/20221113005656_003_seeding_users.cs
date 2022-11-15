@@ -20,6 +20,8 @@ namespace BlogProject.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "DisplayName",
                 table: "AspNetUsers");
+
+
         }
     }
 }

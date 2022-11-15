@@ -26,7 +26,7 @@ namespace BlogProject.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Posts/Details  View /5
+        // GET: Posts/DetailsView /5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
