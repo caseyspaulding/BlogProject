@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheBlogProject.Services;
 
 namespace BlogProject
 {
@@ -59,6 +60,9 @@ namespace BlogProject
 
             //Register our Image Service
             services.AddScoped<IImageService, BasicImageService>();
+
+            //Register the Slug Service
+            services.AddScoped<ISlugService, BasicSlugService>();
 
 
 

@@ -69,7 +69,7 @@ namespace BlogProject.Services
                 FirstName = "Casey",
                 LastName = "Spaulding",
                 DisplayName = "Casey Spaulding",
-                EmailConfirmed = true,
+                EmailConfirmed = true
 
             };
 
