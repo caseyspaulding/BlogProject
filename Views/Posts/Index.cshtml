@@ -1,4 +1,8 @@
-﻿@model IEnumerable<BlogProject.Models.Post>
+﻿@using BlogProject.Services
+@using BlogProject.Models
+
+@inject IImageService imageService 
+@model IEnumerable<BlogProject.Models.Post>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,29 +17,29 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Abstract)
             </th>
-            
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            
-            <th>
-                @Html.DisplayNameFor(model => model.ReadyStatus)
-            </th>
-            
-            
-            
-            
+
+
+
+
+
+
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                <img src="@imageService.DecodeImage(item.ImageData, item.ContentType)"/>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>

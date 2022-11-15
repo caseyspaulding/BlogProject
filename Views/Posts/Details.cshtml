@@ -4,12 +4,19 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8">
-            @Html.Raw(Model.Content)
-    <!-- Post content-->
-       
+
+<!-- Post Content -->
+<article>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                @Html.Raw(Model.Content)
+               
+
+            </div>
         </div>
     </div>
-</div>
+</article>
+
+<!-- Displaying Comments related to this Post -->
+<!-- Display the image of the Comment's Author -->
