@@ -1,13 +1,49 @@
-﻿@using BlogProject.ViewModels
-@model ContactMe
+﻿@model ContactMe
+@using BlogProject.ViewModels
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-            <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
-            <!-- Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. -->
-            <!-- WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! -->
-            <!-- To use the contact form, your site must be on a live web host with PHP! The form will not work locally! -->
+@{
+    ViewData["Title"] = "Contact";
+}
+
+
+<section id="contact" class="contact mb-5">
+    <div class="container" data-aos="fade-up">
+
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h1 class="page-title">Contact us</h1>
+            </div>
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-md-4">
+                <div class="info-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <h3>Address</h3>
+                    <address>A108 Adam Street, NY 535022, USA</address>
+                </div>
+            </div><!-- End Info Item -->
+
+            <div class="col-md-4">
+                <div class="info-item info-item-borders">
+                    <i class="bi bi-phone"></i>
+                    <h3>Phone Number</h3>
+                    <p><a href="tel:+155895548855">+1 5589 55488 55</a></p>
+                </div>
+            </div><!-- End Info Item -->
+
+            <div class="col-md-4">
+                <div class="info-item">
+                    <i class="bi bi-envelope"></i>
+                    <h3>Email</h3>
+                    <p><a href="mailto:info@example.com">info@example.com</a></p>
+                </div>
+            </div><!-- End Info Item -->
+
+        </div>
+
+        <div class="form mt-5">
             <form asp-action="Contact">
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
@@ -23,7 +59,7 @@
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
-                
+
                 <div class="control-group">
                     <div class="form-group col-xs-12 floating-label-form-group controls">
                         <label>Subject</label>
@@ -42,25 +78,18 @@
                 <div id="success"></div>
                 <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
             </form>
-        </div>
+
+        </div><!-- End Contact Form -->
+
     </div>
-</div>
+</section>
 
+<!-- End #main -->
 @section Scripts{
-
     <script>
-        //Default font size but not for placeholder...
         $('#Message').summernote({
             placeholder: "Message"
-        });
+        })
     </script>
 
-
-
 }
-
-
-
-
-
-
