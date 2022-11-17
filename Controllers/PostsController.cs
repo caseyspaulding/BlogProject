@@ -98,7 +98,9 @@ namespace BlogProject.Controllers
 
                 if (!_slugService.IsUnique(slug))
                 {
-
+                    ModelState.AddModelError("Title", "The Title you provided has already been used. Please use another title.");
+                    ViewData["TagValues"] = string.Join(",", tagValues);
+                    return View(post);
                 }
                 
 
