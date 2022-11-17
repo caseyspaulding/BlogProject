@@ -18,6 +18,11 @@
 /*--------------------------------------------------------------
 # 1. ZenBlog template variables 
 --------------------------------------------------------------*/
+div.swal2-container.swal2-center.swal2-backdrop-show > div {
+    outline: 4px solid black;
+    border: 2px solid #0026ff;
+}
+
 :root {
 
   /* Fonts */
