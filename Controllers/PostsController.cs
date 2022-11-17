@@ -85,29 +85,38 @@ namespace BlogProject.Controllers
 
                 //Create the slug and determine if it is unique
                 var slug = _slugService.UrlFriendly(post.Title);
-                //if(!_slugService.IsUnique(slug))
-                //{
-                //    ModelState.AddModelError("Title", "The Title you provided has already been used. Please use another title.");
-                //    ViewData["TagValues"] = string.Join(",", tagValues);
-                //    return View(post);
-                //}
 
-                //post.Slug = slug;
+                // create a variable to store if an error has occurred
+                var validationError = false;
 
-                //Detect incoming duplicate Slugs
-
-                if (!_slugService.IsUnique(slug))
+                if (string.IsNullOrEmpty(slug))
                 {
+                    validationError = true;
+                    ModelState.AddModelError("Title", "The Title you provided cannot be used because it results in an empty slug");
+                    
+                }
+
+                
+                else if (!_slugService.IsUnique(slug))
+                {
+                    validationError = true;
                     ModelState.AddModelError("Title", "The Title you provided has already been used. Please use another title.");
+                    
+                }
+
+                
+                if (validationError)
+                {
                     ViewData["TagValues"] = string.Join(",", tagValues);
                     return View(post);
                 }
-                
+
+                post.Slug = slug;
 
                 _context.Add(post);
                 await _context.SaveChangesAsync();
 
-                //How do I loop over the incoming list of string tags
+                //How do I loop over the incoming list of string?
 
                 foreach(var tagText in tagValues)
                 {
@@ -168,6 +177,7 @@ namespace BlogProject.Controllers
             {
                 try
                 {
+                    // newpost is the originalPost..called newpost because its an edit
                     var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
 
                     newPost.Updated = DateTime.Now;
@@ -175,6 +185,22 @@ namespace BlogProject.Controllers
                     newPost.Abstract = post.Abstract;
                     newPost.Content = post.Content;
                     newPost.ReadyStatus = post.ReadyStatus;
+
+                    var newSlug = _slugService.UrlFriendly(post.Title);
+                    if(newSlug  != newPost.Slug)
+                    {
+                        if(_slugService.IsUnique(newSlug))
+                        {
+                            newPost.Title = post.Title;
+                            newPost.Slug = newSlug;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Title", "This Title cannot be used because it is a duplicate slug.");
+                            ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
+                            return View(post);
+                        }
+                    }
 
                     if(newImage is not null)
                     {
