@@ -80,31 +80,53 @@
 
 
 <button id="commentSection" class="btn btn-sm btn-dark">@Model.Comments.Count COMMENTS </button>
-
+@{ var counter = 0;}
 @foreach (var comment in Model.Comments)
   {
     <div class="gslide-media media-border p-0 mb-2 bg-light">
         <img class="mr-3 mt-3 rounded-circle" style="width:60px;" src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)"/>
         <div class="media-body">
-        <h4>@comment.BlogUser.FullName</h4>
-        <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
-        <p>@comment.Body</p>
-
-        @if(comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == UserManager.GetUserId(User))
+            <h4>@comment.BlogUser.FullName</h4>
+            <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
+            <p>@comment.Body</p>
+            @****************************************
+        ********SECTION 1: Render The Edit Button ************************
+        ******************************************************@
+            @if (comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == userManager.GetUserId(User))
+            {
+                <hr />
+                <button data-bs-toggle="modal" data-bs-target="#editModal" class="btn-sm btn-dark note-float-right">EDIT</button>
+            }
+            @****************************************
+        ********SECTION 2: Render The Moderate and Delete Buttons ************************
+        ******************************************************@
+        @if (User.IsInRole(BlogRole.Moderator.ToString()) && comment.Deleted is null)
                 {
-                     <hr />
-                     <button data-toggle="modal" data-target="#editModal" class="btn-sm btn-dark note-float-right">EDIT</button>
+                    <hr />
+                    <div class="row">
+                        <div class="col-2">
+                            <button class="btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="@($"#moderateModal{counter}")">MODERATE</button>
+                        </div>
+                        <div class="col-2">
+                            <form asp-action="Delete" asp-controller="Comments">
+                                @Html.Hidden("Id",comment.Id)
+                                @Html.Hidden("Slug",comment.Post.Slug)
+                                <button class="btn-dark btn-sm">DELETE</button>
+                            </form>
+                        </div>
+                    </div>
                 }
 
-
-       </div>
+        </div>
     </div>  
 
     @*Modals*@
 
-    <div class="modal" id="editModal">
+    <div class="modal" id="@($"moderateModal{counter}")">
         <div class="modal-dialog">
             <div class="modal-content">
+
+                <!-- Modal Header -->
                 <div class="modal-header">
                     <h4 class="modal-title">Editing Comment...</h4>
                 </div>
@@ -124,13 +146,14 @@
 
                 <!-- Modal footer-->
                 <div class="modal-footer">
-                    <button type="button" class="btn-sm btn-dark font-weight-bold" data-dismiss="modal">CLOSE</button>
+                    <button type="button" class="btn-sm btn-dark font-weight-bold" data-bs-dismiss="modal">CLOSE</button>
                 </div>
 
 
             </div>
         </div>
     </div>
- }
+    counter++;
+}
 <!-- Displaying Comments related to this Post -->
 <!-- Display the image of the Comment's Author -->
