@@ -69,10 +69,10 @@
 
                 <!-- ======= Search Form ======= -->
                 <div class="search-form-wrap js-search-form-wrap">
-                    <form action="search-result.html" class="search-form">
+                    <form asp-action="SearchIndex" asp-controller="Posts">
                         <span class="icon bi-search"></span>
-                        <input type="text" placeholder="Search" class="form-control">
-                        <button class="btn js-search-close"><span class="bi-x"></span></button>
+                        <input name="SearchTerm" type="text" placeholder="Search" class="form-control">
+                        <button class="btn js-search-close" type="submit"><span class="bi-x"></span></button>
                     </form>
                 </div><!-- End Search Form -->
 
@@ -82,7 +82,7 @@
 
     </header><!-- End Header -->
     <!-- Page content-->
-    <main class="p-lg-5" id="main">
+    <main id="main">
 
         @RenderBody()
 
