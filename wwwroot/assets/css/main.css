@@ -854,7 +854,7 @@ section {
 }
 
 .aside-block .custom-tab-nav .nav-item button {
-  color: var(--color-black);
+  color: var(--color-white);
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 700;

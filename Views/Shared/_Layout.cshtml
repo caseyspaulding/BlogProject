@@ -41,52 +41,61 @@
 <body>
 
     <!-- ======= Header ======= -->
-    <header id="header" class="header d-flex align-items-center fixed-top">
+    <header id="header" class="header d-flex align-items-center fixed-top bg-black text-white">
         <div class="container-xl d-flex align-items-center justify-content-between">
             <a class="logo d-flex align-items-center" asp-controller="Home" asp-action="Index">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="assets/img/logo.png" alt=""> -->
-                <h1>Casey Spaulding</h1>
+                
+                <img src="~/assets/img/topLogo.png" alt=""> 
+                <h1 class="text-light"></h1>
             </a>
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a href="index.html">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+
+                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li class="nav-item"><a class="nav-link text-light" asp-controller="Posts" asp-action="Create">Create Post</a></li>
+
+                    }
+                    
                     <partial name="_LoginPartial" />
                 </ul>
 
             </nav><!-- .navbar -->
 
             <div class="position-relative">
-                <a href="#" class="mx-2"><span class="bi-linkedin"></span></a>
-                <a href="#" class="mx-2"><span class="bi-twitter"></span></a>
+                <a href="#" class="mx-2"><span class="text-light bi-linkedin"></span></a>
+                <a href="#" class="mx-2"><span class="text-light bi-twitter"></span></a>
 
-                <a href="#" class="mx-2 js-search-open"><span class="bi-search"></span></a>
-                <i class="bi bi-list mobile-nav-toggle"></i>
+                <a asp-action="SearchIndex" asp-controller="Posts" class="text-light mx-2 js-search-open"><span class="bi-search"></span></a>
+                <i class="bi bi-list mobile-nav-toggle text-light"></i>
 
                 <!-- ======= Search Form ======= -->
                 <div class="search-form-wrap js-search-form-wrap">
                     <form asp-action="SearchIndex" asp-controller="Posts">
-                        <span class="icon bi-search"></span>
-                        <input name="SearchTerm" type="text" placeholder="Search" class="form-control">
+                        <input type="text" name="SearchTerm" class="form-control" placeholder="Search Term">
                         <button class="btn js-search-close" type="submit"><span class="bi-x"></span></button>
                     </form>
-                </div><!-- End Search Form -->
+                </div>
+            <!-- End Search Form -->
 
             </div>
 
         </div>
 
-    </header><!-- End Header -->
+    </header>
+    
+    <!-- End Header -->
+
     <!-- Page content-->
-    <main id="main">
+    <div class="m-5">
 
         @RenderBody()
 
-    </main>
+    </div>
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
 
