@@ -1,4 +1,11 @@
-﻿@model BlogProject.Models.Post
+﻿@using BlogProject.Services
+@using Microsoft.AspNetCore.Identity
+@using Newtonsoft.Json
+
+@model BlogProject.Models.Post
+
+@inject IImageService imageService 
+@inject UserManager<BlogUser> userManager
 
 @{
     ViewData["Title"] = "Details";
@@ -69,6 +76,52 @@
     </section>
 </main><!-- End #main -->
 
+<hr />
 
+
+<button id="commentSection" class="btn btn-sm btn-dark">@Model.Comments.Count COMMENTS </button>
+
+@foreach (var comment in Model.Comments)
+  {
+    <div class="gslide-media media-border p-0 mb-2 bg-light">
+        <img class="mr-3 mt-3 rounded-circle" style="width:60px;" src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)"/>
+        <div class="media-body">
+        <h4>@comment.BlogUser.FullName</h4>
+        <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
+        <p>@comment.Body</p>
+
+        @if(comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == UserManager.GetUserId(User))
+                {
+                     <hr />
+                     <button data-toggle="modal" data-target="#editModal" class="btn-sm btn-dark note-float-right">EDIT</button>
+                }
+
+
+       </div>
+    </div>  
+
+    @*Modals*@
+
+    <div class="modal" id="editModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editing Comment...</h4>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form asp-action="Edit" asp-controller="Comments">
+                        @Html.Hidden("Id", comment.Id)
+
+                        <div class="form-group">
+                            <textarea name="Body" class="form-control" required>@comment.Body</textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+ }
 <!-- Displaying Comments related to this Post -->
 <!-- Display the image of the Comment's Author -->

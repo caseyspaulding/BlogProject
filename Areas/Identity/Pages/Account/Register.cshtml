@@ -4,10 +4,12 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
 
-<div class="row">
+<h1>@ViewData["Title"]</h1>
+<div class="row mt-3">
+    
     <div class="col-md-4">
+        
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
             <h4>Create a new account.</h4>
             <hr />
@@ -40,9 +42,9 @@
             <div class="form-group">
                 <label>Select Image</label>
                 <div class="custom-file">
-                    <input asp-for="Input.ImageFile" type="file" class="form-control-file custome-file-input" accept=".png,.jpg,.gif,.tif,.jpeg"/>
+                    <input asp-for="Input.ImageFile" type="file" class="form-control-file custome-file-input" accept=".png,.jpg,.gif,.tif,.jpeg" />
                     <label asp-for="Input.ImageFile" class="control-label custome-file-label">Choose</label>
-               
+
                 </div>
             </div>
 
