@@ -5,6 +5,8 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+
+
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -5355,6 +5357,10 @@ textarea.form-control-lg {
   border-radius: var(--bs-modal-border-radius);
   outline: 0;
 }
+
+
+
+
 
 .modal-backdrop {
   --bs-backdrop-zindex: 1050;

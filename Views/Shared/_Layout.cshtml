@@ -58,14 +58,16 @@
                     <li class="nav-item"><a class="nav-link text-light" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     @if (User.IsInRole("Administrator"))
                     {
-        <li class="nav-item"><a class="nav-link text-light" asp-controller="Posts" asp-action="Create">Create Post</a></li>}
+        <li class="nav-item"><a class="nav-link text-light" asp-controller="Posts" asp-action="Create">Create Post</a></li>
+}
 
                     <partial name="_LoginPartial" />
                 </ul>
 
             </nav><!-- .navbar -->
 
-            <div class="position-relative">
+            <div>
+                <!--Position fixed in div class-->
                 <a href="#" class="mx-2"><span class="text-light bi-linkedin"></span></a>
                 <a href="#" class="mx-2"><span class="text-light bi-twitter"></span></a>
 
@@ -87,34 +89,18 @@
 
     </header>
     <!-- Page header with logo and tagline-->
-    <header class="py-5 bg-light border-bottom mb-4" style="background-image: url(@ViewData["HeaderImage"])">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="text-center my-5">
-                <h1 class="fw-bolder">@ViewData["MainText"]</h1>
-                <p class="lead mb-0"> <span class="subheading">@ViewData["SubText"]</span></p>
-                <!-- ======= Search Form ======= -->
-                <form asp-action="SearchIndex" asp-controller="Posts">
-                    <div class="input-group mt-5">
-                        <input type="text" name="SearchTerm" class="form-control" placeholder="Search Term">
-                        <div class="input-group-append">
-                            <button class="btn btn-dark" type="submit">Search</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </header>
     <!-- End Header -->
     <!-- Page content-->
-    <div class="container" data-aos="fade-up">
+    <section class="mt-5">
+        <div class="container">
 
 
-        
+
             @RenderBody()
-       
 
-    </div>
+
+        </div>
+    </section>
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
 

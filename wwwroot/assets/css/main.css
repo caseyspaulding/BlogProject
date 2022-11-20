@@ -16,6 +16,10 @@ div.swal2-container.swal2-center.swal2-backdrop-show > div {
     border: 2px solid #0026ff;
 }
 
+.modal-backdrop {
+    /* bug fix - no overlay */
+    display: none;
+}
 :root {
   scroll-behavior: smooth;
 }

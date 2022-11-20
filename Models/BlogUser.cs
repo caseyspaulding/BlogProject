@@ -13,12 +13,12 @@ namespace BlogProject.Models
         [Required]
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
         [Display(Name ="First Name")]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [Required]
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
         [Display(Name = "Last Name")]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
 
         [Required]
@@ -37,7 +37,7 @@ namespace BlogProject.Models
         public string GitHub { get; set; }
 
         [NotMapped]
-        public string FullName
+        public string? FullName
         {
             get
             {

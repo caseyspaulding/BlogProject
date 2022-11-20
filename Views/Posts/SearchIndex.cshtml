@@ -8,11 +8,11 @@
 @inject UserManager<BlogUser> userManager
 @model IPagedList<Post>
 <!-- ======= Search Results ======= -->
-<section id="search-result" class="search-result">
+<section id="search-result" class="catagory-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
-                <h3 class="category-title">Search Results</h3>
+            <div class="col-md-9 section-header ">
+                <h2 class="border-bottom border-2 border-dark">Search Results</h2>
 
 
                 @foreach (var post in Model)

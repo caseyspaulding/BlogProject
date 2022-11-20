@@ -16,91 +16,174 @@
 }
 
 
-    <section class="category-section">
-        <div class="container" data-aos="fade-up">
+<section class="category-section">
+    <div class="container" data-aos="fade-up">
 
-            <div class="section-header d-flex justify-content-between align-items-center mb-5">
-                <h2>Code Talk</h2>
-                <div><a href="category.html" class="more">See All</a></div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-9">
-
-                    <div class="post-entry-2">
-                        @foreach (var blog in Model)
-                        {
-                            <div class="">
-                                <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Name" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                                    <img src="@blog.Image" alt="" class="img-fluid">
-                                </a>
-                                <div>
-                                    <div class="post-meta border-bottom"> <span class="mx-1">&bullet;</span> <span>@blog.Created.ToString("MMM dd, yyyy")</span></div>
-                                    <h3><a href="single-post.html">@blog.Name</a></h3>
-                                    <p>@blog.Description</p>
-                                    <div class="d-flex align-items-center author">
-                                        <div class="photo"><img src="">
-                                            <h3 class="m-0 p-0">@blog.BlogUser.FullName  </h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        }
-                    </div>
-
-
-                </div>
-
-                <div class="col-md-3">
-                    <div class="post-entry-1 border-bottom">
-                        @foreach (var blog in Model)
-                        {
-                            <div class="">
-                                <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                                    <img src="@blog" alt="" class="img-fluid">
-                                </a>
-                                <div>
-                                    <div class="post-meta"> <span class="mx-1">&bullet;</span> <span>@blog.Created.ToString("MMM dd, yyyy")</span></div>
-                                    <h3><a href="single-post.html">@blog.Image</a></h3>
-                                    <p>@blog.Name</p>
-                                    <div class="d-flex align-items-center author">
-                                        <div class="photo"><img class="m-3 mt-3 rounded-circle" style="width:80px;" src="<!--Image-->" /></div>
-                                        <div class="name">
-                                            <h3 class="m-0 p-0">@blog.BlogUser.FullName  </h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        }
-                    </div>
-
-
-                </div>
-            </div>
-
-            <!-- Paging Controls -->
-            <div class="row">
-                    <div class="col h5">
-                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                    </div>
-            </div>
-
-                <div class="row">
-                    <div class="col">
-                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
-                        new PagedListRenderOptions
-                        {
-                            LiElementClasses = new string[] { "page-item" },
-                            PageClasses = new string[] { "page-link" }
-                        })
-                    </div>
-                </div>
-
+        <div class="section-header d-flex justify-content-between align-items-center mb-5">
+            <h2>Code Talk</h2>
+            
         </div>
 
-    </section>
+        <div class="row">
+            <!-- Blog entries-->
+            <div class="col-lg-8">
+                <!-- Featured blog post-->
+                <div class="card mb-4">
+                    <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                    <div class="card-body">
+                        <div class="small text-muted">January 1, 2022</div>
+                        <h2 class="card-title">Featured Post Title</h2>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
+                        <a class="btn btn-primary" href="#!">Read more →</a>
+                    </div>
+                </div>
+                <!-- Nested row for non-featured blog posts-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!-- Blog post-->
+                        <div class="card mb-4">
+                            <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                            <div class="card-body">
+                                <div class="small text-muted">January 1, 2022</div>
+                                <h2 class="card-title h4">Post Title</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
+                                <a class="btn btn-primary" href="#!">Read more →</a>
+                            </div>
+                        </div>
+                        <!-- Blog post-->
+                        <div class="card mb-4">
+                            <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                            <div class="card-body">
+                                <div class="small text-muted">January 1, 2022</div>
+                                <h2 class="card-title h4">Post Title</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
+                                <a class="btn btn-primary" href="#!">Read more →</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Blog post-->
+                        <div class="card mb-4">
+                            <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                            <div class="card-body">
+                                <div class="small text-muted">January 1, 2022</div>
+                                <h2 class="card-title h4">Post Title</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
+                                <a class="btn btn-primary" href="#!">Read more →</a>
+                            </div>
+                        </div>
+                        <!-- Blog post-->
+                        <div class="card mb-4">
+                            <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                            <div class="card-body">
+                                <div class="small text-muted">January 1, 2022</div>
+                                <h2 class="card-title h4">Post Title</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam.</p>
+                                <a class="btn btn-primary" href="#!">Read more →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagination-->
+                
+            </div>
+            <!-- Side widgets-->
+            <div class="col-lg-4">
+                <!-- Search widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Search</div>
+                    <div class="card-body">
+                        <!-- ======= Search Form ======= -->
+                        <form asp-action="SearchIndex" asp-controller="Posts">
+                            <div class="input-group">
+                                <input type="text" name="SearchTerm" class="form-control" placeholder="Search Term">
+                                <div class="input-group-append">
+                                    <button class="btn btn-dark" type="submit">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Categories widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Categories</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#!">Web Design</a></li>
+                                    <li><a href="#!">HTML</a></li>
+                                    <li><a href="#!">Freebies</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#!">JavaScript</a></li>
+                                    <li><a href="#!">CSS</a></li>
+                                    <li><a href="#!">Tutorials</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Side widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Side Widget</div>
+                    <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="post-entry-1 border-bottom">
+            @foreach (var blog in Model)
+            {
+                <div class="">
+                    <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                        <img src="@blog" alt="" class="img-fluid">
+                    </a>
+                    <div>
+                        <div class="post-meta"> <span class="mx-1">&bullet;</span> <span>@blog.Created.ToString("MMM dd, yyyy")</span></div>
+                        <h3><a href="single-post.html">@blog.Image</a></h3>
+                        <p>@blog.Name</p>
+                        <div class="d-flex align-items-center author">
+                            <div class="photo"><img class="m-3 mt-3 rounded-circle" style="width:80px;" src="<!--Image-->" /></div>
+                            <div class="name">
+                                <h3 class="m-0 p-0">@blog.BlogUser.FullName  </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+
+        <!-- Paging Controls -->
+        <div class="row">
+            <div class="col h5">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" }
+                })
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+   
+
+</section>
 
 
 

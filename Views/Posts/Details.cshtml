@@ -17,64 +17,64 @@
 
 
 <!-- Post Content -->
-<main id="main">
-
-    <section class="single-post-content">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9 post-content" data-aos="fade-up">
-
-                    <!-- ======= Single Post Content ======= -->
-                    @Html.Raw(Model.Post.Content)
 
 
-                </div><!-- End Single Post Content -->
-                <div class="col-md-3">
-                    <div class="aside-block">
-                        <h3 class="aside-title">Tags</h3>
-                        <ul class="aside-tags list-unstyled">
-                            <li>
-                                @foreach (var tag in Model.Tags)
-                                {
-                                    <a asp-action="TagIndex" asp-route-tag="@tag">#@tag</a>
-                                }
-                            </li>
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 post-content" data-aos="fade-up">
 
-                        </ul>
-                    </div><!-- End Tags -->
-
-                </div>
-                <div>
-
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <form asp-action="Create" asp-controller="Comments" method="post">
-                            @Html.Hidden("PostId", Model.Post.Id)
-                            @Html.Hidden("Slug", Model.Post.Slug)
-
-                            <div class="form-group">
-                                <label class="h2 control-label font-weight-bold">Add Comment</label>
-                                <textarea name="body" class="form-control" rows="10"></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary mt-3"> Submit</button>
+                <!-- ======= Single Post Content ======= -->
+                @Html.Raw(Model.Post.Content)
 
 
-                        </form>
+            </div><!-- End Single Post Content -->
+            <div class="col-md-3">
+                <div class="aside-block">
+                    <h3 class="aside-title">Tags</h3>
+                    <ul class="aside-tags list-unstyled">
+                        <li>
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <a asp-action="TagIndex" asp-route-tag="@tag">#@tag</a>
+                            }
+                        </li>
 
-                    }
-                    else
-                    {
-                        <a class="btn btn-dark" asp-area="Identity" asp-page="/Account/Login">
-                            Login to Add Comments
-                        </a>
-                    }
-                </div>
+                    </ul>
+                </div><!-- End Tags -->
 
             </div>
+            <div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-action="Create" asp-controller="Comments" method="post">
+                        @Html.Hidden("PostId", Model.Post.Id)
+                        @Html.Hidden("Slug", Model.Post.Slug)
+
+                        <div class="form-group">
+                            <label class="h2 control-label font-weight-bold">Add Comment</label>
+                            <textarea name="body" class="form-control" rows="10"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3"> Submit</button>
+
+
+                    </form>
+
+                }
+                else
+                {
+                    <a class="btn btn-dark" asp-area="Identity" asp-page="/Account/Login">
+                        Login to Add Comments
+                    </a>
+                }
+            </div>
+
         </div>
-    </section>
-</main><!-- End #main -->
+    </div>
+</article>
+<!-- End #main -->
 
 <hr />
 
@@ -213,7 +213,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn-sm btn-dark font-weight-bold" data-bs-dismiss="modal">CLOSE</button>
+                    <button type="button" class="btn-sm btn-dark font-weight-bold" data-dismiss="modal">CLOSE</button>
                 </div>
 
             </div>
@@ -272,7 +272,7 @@
 @section Scripts{
 
     <script>
-
+        $('#editModal').appendTo("body")
     </script>
 
 }
