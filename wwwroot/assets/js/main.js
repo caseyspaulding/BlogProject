@@ -4,6 +4,34 @@
 * Author: BootstrapMade.com
 * License: https:///bootstrapmade.com/license/
 */
+
+/*Modal*/
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+            // element added to DOM
+            const hasClass = [].some.call(mutation.addedNodes, (el) => {
+                return el.classList.contains('modal-backdrop');
+            });
+            if (hasClass) {
+                // element has class `MyClass`
+                $('.modal-backdrop').appendTo('DEFINEWHERETOAPPENDIT');
+                console.log('element ".modal-backdrop" added');
+            }
+        }
+    });
+});
+
+const config = {
+    attributes: true,
+    childList: true,
+    characterData: true,
+};
+
+observer.observe(document.body, config);
+
+/* End Modal */
+
 document.addEventListener('DOMContentLoaded', () => {
   "use strict";
 

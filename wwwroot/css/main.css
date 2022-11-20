@@ -20,6 +20,16 @@ div.swal2-container.swal2-center.swal2-backdrop-show > div {
   scroll-behavior: smooth;
 }
 
+.modal-backdrop { /* bug fix - no overlay */
+    display: none;
+    z-index: -1;
+}
+
+
+
+
+
+
 body {
   color: rgba(var(--color-primary-rgb), 1);
 }

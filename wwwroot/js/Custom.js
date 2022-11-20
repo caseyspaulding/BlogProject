@@ -99,3 +99,9 @@ const swalWithDarkButton = Swal.mixin({
     buttonsStyling: false
 
 });
+
+$(document).ready(function () {
+    // Append to body before showing modal.
+    $('#editModal').appendTo($('body'));
+    $('.modal').modal('show');
+});

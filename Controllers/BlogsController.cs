@@ -11,6 +11,8 @@ using BlogProject.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using BlogProject.Enums;
+using X.PagedList;
 
 namespace BlogProject.Controllers
 {
@@ -18,13 +20,17 @@ namespace BlogProject.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
+        private readonly ISlugService _slugService;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly BlogSearchService _blogSearchService;
 
-        public BlogsController(ApplicationDbContext context, IImageService imageService, UserManager<BlogUser> userManager)
+        public BlogsController(ApplicationDbContext context, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService, ISlugService slugService)
         {
             _context = context;
             _imageService = imageService;
             _userManager = userManager;
+            _blogSearchService = blogSearchService;
+            _slugService = slugService;
         }
 
         // GET: Blogs

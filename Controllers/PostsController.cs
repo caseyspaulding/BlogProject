@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using BlogProject.Enums;
 using X.PagedList;
+using BlogProject.ViewModels;
 
 
 namespace BlogProject.Controllers
@@ -40,9 +41,24 @@ namespace BlogProject.Controllers
             var pageNumber = page ?? 1;
             var pageSize = 10;
 
-            var posts = _blogSearchService.Search(searchTerm);
+            var posts = _context.Posts.Where(p => p.ReadyStatus == ReadyStatus.ProductionReady).AsQueryable();
+            if(searchTerm != null)
+            {
+                posts = posts.Where(
+                    p => p.Title.Contains(searchTerm) ||
+                    p.Abstract.Contains(searchTerm) ||
+                    p.Content.Contains(searchTerm) ||
+                    p.Comments.Any(c => c.Body.Contains(searchTerm) ||
+                                        c.ModeratedBody.Contains(searchTerm) ||
+                                        c.BlogUser.FirstName.Contains(searchTerm) ||
+                                        c.BlogUser.LastName.Contains(searchTerm) ||
+                                        c.BlogUser.Email.Contains(searchTerm)));
+            }
 
+            posts = posts.OrderByDescending(p => p.Created);
             return View(await posts.ToPagedListAsync(pageNumber, pageSize));
+            
+            
         }
         
         // GET: Posts
@@ -65,12 +81,12 @@ namespace BlogProject.Controllers
             var pageSize = 10;
 
             //var posts = _context.Posts.Where(p => p.BlogId == id).ToList();
-            var posts = await _context.Posts
+             var posts = await _context.Posts
                 .Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
                 .OrderByDescending(p => p.Created)
                 .ToPagedListAsync(pageNumber, pageSize);
 
-            return View("Index",posts);
+            return View(posts);
         }
 
 
@@ -78,25 +94,35 @@ namespace BlogProject.Controllers
         // GET: Posts/DetailsView /5
         public async Task<IActionResult> Details(string slug)
         {
-            if (string.IsNullOrEmpty(slug))
-            {
-                return NotFound();
-            }
+            ViewData["Title"] = "Post Details Page";
 
+            if (string.IsNullOrEmpty(slug)) return NotFound();
+            
             var post = await _context.Posts
-                .Include(p => p.Blog)
                 .Include(p => p.BlogUser)
                 .Include(p => p.Tags)
+                .ThenInclude(c => c.BlogUser)
                 .Include(p => p.Comments)
                 .ThenInclude(c => c.BlogUser)
+                //.ThenInclude(c => c.Moderator)
                 .FirstOrDefaultAsync(m => m.Slug == slug);
 
-            if (post == null)
-            {
-                return NotFound();
-            }
+            if (post == null) return NotFound();
 
-            return View(post);
+            var dataVM = new PostDetailViewModel()
+            {
+                Post = post,
+                Tags = _context.Tags
+                        .Select(t => t.Text.ToLower())
+                        .Distinct().ToList()
+
+            };
+
+            ViewData["HeaderImage"] = _imageService.DecodeImage(post.ImageData, post.ContentType);
+            ViewData["MainText"] = post.Title;
+            ViewData["SubTest"] = post.Abstract;
+
+            return View(dataVM);
         }
 
         // GET: Posts/Create

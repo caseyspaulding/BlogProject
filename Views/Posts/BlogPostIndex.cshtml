@@ -1,83 +1,136 @@
-﻿@using BlogProject.Services
-@using BlogProject.Models
+﻿@using BlogProject.Models
+@using BlogProject.Services
+@using BlogProject.Enums
+@using Microsoft.AspNetCore.Identity;
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 
 
+@inject UserManager<BlogUser> userManager
 @inject IImageService imageService
+
 @model IPagedList<Post>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+<section class="category-section">
+    <div class="container" data-aos="fade-up">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Image
-            </th>
-            <th>
-                Title
-            </th>
-            <th>
-                Abstract
-            </th>
+        <div class="section-header d-flex justify-content-between align-items-center mb-5">
+            <h2>Code Talk</h2>
+            <div><a href="category.html" class="more">See All</a></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-9">
+
+                <div class="post-entry-2">
+                    @foreach (var post in Model)
+                    {
+                        <div class="">
+                            <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@post.BlogUser.FullName" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                                <img src="@post.Image" alt="" class="img-fluid">
+                            </a>
+                            <div>
+                                <div class="post-meta border-bottom"> <span class="mx-1">&bullet;</span> <span>@post.Created.ToString("MMM dd, yyyy")</span></div>
+                                <h3><a href="single-post.html">@post.BlogUser.FullName</a></h3>
+                                <p>@post.Abstract</p>
+                                <div class="d-flex align-items-center author">
+                                    <div class="photo">
+                                        <img src="">
+                                        <h3 class="m-0 p-0">@post.BlogUser.FullName  </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="post-entry-1 border-bottom">
+                    @foreach (var post in Model)
+                    {
+                        <div class="">
+                            <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@post.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                                <img src="@post.Title" alt="" class="img-fluid">
+                            </a>
+                            <div>
+                                <div class="post-meta"> <span class="mx-1">&bullet;</span> <span>@post.Created.ToString("MMM dd, yyyy")</span></div>
+                                <h3><a href="single-post.html">@post.Image</a></h3>
+                                <p>@post.BlogUser.FullName</p>
+                                <div class="d-flex align-items-center author">
+                                    <div class="photo"><img class="m-3 mt-3 rounded-circle" style="width:80px;" src="<!--Image-->" /></div>
+                                    <div class="name">
+                                        <h3 class="m-0 p-0">@post.BlogUser.FullName  </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Paging Controls -->
+        <div class="row">
+            <div class="col h5">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                @Html.PagedListPager(Model, page => Url.Action("BlogPostIndex", new { id = Model.FirstOrDefault().BlogId }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" }
+                })
+            </div>
+        </div>
+
+    </div>
+
+</section>
 
 
 
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <img src="@imageService.DecodeImage(item.ImageData, item.ContentType)" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Abstract)
-                </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReadyStatus)
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-slug="@item.Slug">Edit</a> |
-                    <a asp-action="Details" asp-route-slug="@item.Slug">Details</a> |
-                    <a asp-action="Delete" asp-route-slug="@item.Slug">Delete</a>
-                </td>
-            </tr>
+@section Scripts{
+    <script>
+        var swalMsg = '@TempData["SweetAlert"]'
+        if (swalMsg != "") {
+            Swal.fire({
+                icon: 'success',
+                title: swalMsg,
+                    timer: 2500
+            })
         }
-    </tbody>
-</table>
 
-<hr />
+
+        $(document).ready(function () {
+            $("p").tooltip();
+        });
+    </script>
+
+}
 
 <div class="row">
     <div class="col h3">
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
     </div>
 </div>
-
 <div class="row">
     <div class="col">
-        @Html.PagedListPager(Model, page => Url.Action("BlogPostIndex", new { id = Model.FirstOrDefault().BlogId, page = page}),
+        @Html.PagedListPager(Model, page => Url.Action("BlogPostIndex", new { id = Model.FirstOrDefault().BlogId, page = page }),
             new PagedListRenderOptions
             {
                 LiElementClasses = new string[] { "page-item" },

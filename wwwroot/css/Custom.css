@@ -9,5 +9,11 @@ div.swal2-container.swal2-center.swal2-backdrop-show> div {
 
 }
 
+.page-item.active .page-link{
+    background-color: black;
+    border-color: grey;
+}
 
-
+.page-link {
+    color: #808080
+}

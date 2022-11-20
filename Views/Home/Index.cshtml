@@ -3,20 +3,19 @@
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 @using BlogProject.Services
+@using Microsoft.AspNetCore.Identity
+@using BlogProject.Enums
+
 @model IPagedList<Blog>
 
+@inject IImageService _imageService
+@inject UserManager<BlogUser> _userManager
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<main id="main">
 
-    <!-- ======= Hero Slider Section ======= -->
-    <!-- End Hero Slider Section -->
-    <!-- ======= Post Grid Section ======= -->
-    <!-- End Post Grid Section -->
-    <!-- ======= Culture Category Section ======= -->
     <section class="category-section">
         <div class="container" data-aos="fade-up">
 
@@ -32,16 +31,15 @@
                         @foreach (var blog in Model)
                         {
                             <div class="">
-                                <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                                    <img src="@blog.ImageData" alt="" class="img-fluid">
+                                <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Name" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                                    <img src="@blog.Image" alt="" class="img-fluid">
                                 </a>
                                 <div>
                                     <div class="post-meta border-bottom"> <span class="mx-1">&bullet;</span> <span>@blog.Created.ToString("MMM dd, yyyy")</span></div>
                                     <h3><a href="single-post.html">@blog.Name</a></h3>
                                     <p>@blog.Description</p>
                                     <div class="d-flex align-items-center author">
-                                        <div class="photo"><img src="assets/img/person-2.jpg" alt="" class="img-fluid"></div>
-                                        <div class="name">
+                                        <div class="photo"><img src="">
                                             <h3 class="m-0 p-0">@blog.BlogUser.FullName  </h3>
                                         </div>
                                     </div>
@@ -60,14 +58,14 @@
                         {
                             <div class="">
                                 <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                                    <img src="@blog.ImageData" alt="" class="img-fluid">
+                                    <img src="@blog" alt="" class="img-fluid">
                                 </a>
                                 <div>
                                     <div class="post-meta"> <span class="mx-1">&bullet;</span> <span>@blog.Created.ToString("MMM dd, yyyy")</span></div>
-                                    <h3><a href="single-post.html">@blog.Name</a></h3>
-                                    <p>@blog.Description</p>
+                                    <h3><a href="single-post.html">@blog.Image</a></h3>
+                                    <p>@blog.Name</p>
                                     <div class="d-flex align-items-center author">
-                                        <div class="photo"><img src="assets/img/person-2.jpg" alt="" class="img-fluid"></div>
+                                        <div class="photo"><img class="m-3 mt-3 rounded-circle" style="width:80px;" src="<!--Image-->" /></div>
                                         <div class="name">
                                             <h3 class="m-0 p-0">@blog.BlogUser.FullName  </h3>
                                         </div>
@@ -81,43 +79,49 @@
 
                 </div>
             </div>
+
+            <!-- Paging Controls -->
             <div class="row">
-                <div class="col h5">
-                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                </div>
+                    <div class="col h5">
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    </div>
             </div>
 
-            <div class="row">
-                <div class="col">
-                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
-                    new PagedListRenderOptions
-                    {
-                        LiElementClasses = new string[] { "page-item" },
-                        PageClasses = new string[] { "page-link" }
-                    }
-
-                )
+                <div class="row">
+                    <div class="col">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                        new PagedListRenderOptions
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" }
+                        })
+                    </div>
                 </div>
-            </div>
 
         </div>
-        
-    </section><!-- End Culture Category Section -->
-    <!-- ======= Culture Category Section ======= -->
-    <!-- End Culture Category Section -->
-    <!-- ======= Business Category Section ======= -->
-    <!-- End Business Category Section -->
-    <!-- ======= Lifestyle Category Section ======= -->
-    <!-- End Lifestyle Category Section -->
 
-   
+    </section>
 
 
-</main>
 
 
 
 @section Scripts{
+    <script>
+        var swalMsg = '@TempData["SweetAlert"]'
+        if (swalMsg != "") {
+            Swal.fire({
+                icon: 'success',
+                title: swalMsg,
+                    timer: 2500
+            })
+        }
+
+
+        $(document).ready(function () {
+            $("p").tooltip();
+        });
+    </script>
 
 }
 
