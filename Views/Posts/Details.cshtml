@@ -29,7 +29,7 @@
                 <div class="section-header">
                     <h1 class="mb-1">@Html.Raw(Model.Post.Title)</h1>
                     <div class="post-meta"><span class="date"></span> <span class="mx-1">&bullet;</span> <span>@Model.Post.Created.ToString("MMM dd, yyyy")</span></div>
-                    <img src="@imageService.DecodeImage(Model.Post.ImageData, Model.Post.ContentType)" width="700">
+                    <img class="img-fluid" src="@imageService.DecodeImage(Model.Post.ImageData, Model.Post.ContentType)">
                 </div>
                 <!-- ======= Single Post Content ======= -->
                 @Html.Raw(Model.Post.Content)
