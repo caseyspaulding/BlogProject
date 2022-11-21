@@ -4,6 +4,7 @@
 @using BlogProject.Enums
 @using BlogProject.ViewModels
 @using BlogProject.Models
+@using BlogProject.Data
 
 @model PostDetailViewModel
 
@@ -19,17 +20,28 @@
 <!-- Post Content -->
 
 
-<article>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-9 post-content" data-aos="fade-up">
+<section>
+    <div class="container" data-aos="fade-up">
 
+        <div class="row">
+
+            <div class="col-md-9">
+                <div class="section-header">
+                    <h1 class="mb-1">@Html.Raw(Model.Post.Title)</h1>
+                    <div class="post-meta"><span class="date"></span> <span class="mx-1">&bullet;</span> <span>@Model.Post.Created.ToString("MMM dd, yyyy")</span></div>
+                    <img src="@imageService.DecodeImage(Model.Post.ImageData, Model.Post.ContentType)" width="700">
+                </div>
                 <!-- ======= Single Post Content ======= -->
                 @Html.Raw(Model.Post.Content)
-
+                <div class="d-flex align-items-center author mb-2">
+                    <div class="photo"><img src="@imageService.DecodeImage(Model.Post.BlogUser.ImageData, Model.Post.BlogUser.ContentType)" alt="" class="img-fluid"></div>
+                    <div class="">
+                        <h5 class="m-0 p-0">@Model.Post.BlogUser.FullName</h5>
+                    </div>
+                </div>
 
             </div><!-- End Single Post Content -->
-            <div class="col-md-3 mt-3">
+            <div class="col-md-3 mt-3 border-start border-dark">
                 <div class="aside-block">
                     <h3 class="aside-title">Tags</h3>
                     <ul class="aside-tags list-unstyled">
@@ -45,14 +57,15 @@
 
             </div>
             <div>
-
+                <!--COMMENTS SECTION-->
+                <h5 id="commentSection" class="comment-title py-4">@Model.Post.Comments.Count Comments</h5>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <form asp-action="Create" asp-controller="Comments" method="post">
                         @Html.Hidden("PostId", Model.Post.Id)
                         @Html.Hidden("Slug", Model.Post.Slug)
 
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                             <label class="h2 control-label font-weight-bold">Add Comment</label>
                             <textarea name="body" class="form-control" rows="10"></textarea>
                         </div>
@@ -65,7 +78,7 @@
                 }
                 else
                 {
-                    <a class="btn btn-dark" asp-area="Identity" asp-page="/Account/Login">
+                    <a class="btn btn-dark mt-5" asp-area="Identity" asp-page="/Account/Login">
                         Login to Add Comments
                     </a>
                 }
@@ -73,35 +86,33 @@
 
         </div>
     </div>
-</article>
+</section>
 <!-- End #main -->
-
-<hr />
-
-<!--COMMENTS SECTION-->
-<a id="commentSection" class="btn btn-sm btn-dark mb-2">@Model.Post.Comments.Count COMMENTS </a>
 
 @foreach (var comment in Model.Post.Comments.OrderByDescending(c => c.Created))
 {
-    <div class="media p-3 mb-2 bg-cf media-border">
-        <img src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)" alt="@comment.BlogUser.FullName" class="mr-3 mt-3 rounded-pill img-thumbnail " style="width:60px;">
+    <div class="">
+        <img src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)"
+             alt="@comment.BlogUser.FullName"
+             class="mr-3 mt-3 rounded-pill img-thumbnail "
+             style="width:60px;">
 
         <div class="media-body">
             <h4>@comment.BlogUser.FullName</h4>
 
             @****************************************************************
-                SECTION 1: POST ON OR UPDATED ON
-                *****************************************************************@
+        SECTION 1: POST ON OR UPDATED ON
+        *****************************************************************@
             @if (comment.Deleted is not null)
             {
-                <span class="small">
+                <span class="small font-italic">
                     <span class="font-weight-bolder">Deleted</span> : @comment.Deleted?.ToString("MMM dd, yyyy")
                 </span>
             }
             else if (comment.Moderated is not null)
             {
-                <span class="small">
-                    <span class="font-weight-bolder">
+                <span class="small font-italic">
+                    <span class="font-italic">
                         Moderated <span class="text-danger font-italic">(@comment.ModerationType.ToString().ToLower())</span>
                     </span>
                     : @comment.Moderated?.ToString("MMM dd, yyyy")
@@ -109,38 +120,40 @@
             }
             else if (comment.Updated is not null)
             {
-                <span class="small">
-                    <span class="font-weight-bolder">Updated </span> : @comment.Updated?.ToString("MMM dd, yyyy")
+
+                <span class="small font-italic">
+                    <span class="font-italic">Updated </span> : <span class="type-italic">@comment.Updated?.ToString("MMM dd, yyyy")</span>
                 </span>
+
             }
             else
             {
-                <span class="small">
-                    <span class="font-weight-bolder">Created </span> : @comment.Created.ToString("MMM dd, yyyy")
+                <span class="small ">
+                    <span class="type-italic">Created </span> : @comment.Created.ToString("MMM dd, yyyy")
                 </span>
             }
 
             @*****************************************************************
-                SECTION 2: HOW DO WE COMPOSE THE BODY
-                *****************************************************************@
+        SECTION 2: HOW DO WE COMPOSE THE BODY
+        *****************************************************************@
             @*****************************************************************
-                SECTION 2A: Render pre text
-                *****************************************************************@
+        SECTION 2A: Render pre text
+        *****************************************************************@
             <br />
             @if (comment.Deleted is not null)
             {
-                <span class="font-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName was deleted by the Moderator...</span>
+                <span class="type-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName was deleted by the Moderator...</span>
             }
             else if (comment.Moderated is not null)
             {
-                <span class="font-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName has been Moderated...</span>
+                <span class="type-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName has been Moderated...</span>
             }
 
             <hr />
 
             @*****************************************************************
-                SECTION 2B: Render main body
-                *****************************************************************@
+        SECTION 2B: Render main body
+        *****************************************************************@
             @if (string.IsNullOrEmpty(comment.Body))
             {
                 <span class="small font-italic">Comment not available...</span>
@@ -156,8 +169,8 @@
 
 
             @****************************************************************
-                    SECTION 3: CAN WE RENDER THE EDIT BUTTON
-                *****************************************************************@
+            SECTION 3: CAN WE RENDER THE EDIT BUTTON
+        *****************************************************************@
             @if (comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == userManager.GetUserId(User))
             {
                 <hr>
@@ -165,8 +178,8 @@
             }
 
             @****************************************************************
-                SECTION 4: CAN WE RENDER THE MODERATE AND DELETE BUTTONS
-                *****************************************************************@
+        SECTION 4: CAN WE RENDER THE MODERATE AND DELETE BUTTONS
+        *****************************************************************@
             @if (User.IsInRole(BlogRole.Moderator.ToString()) && comment.Deleted is null)
             {
                 <hr>
@@ -175,21 +188,21 @@
                         <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#moderate">MODERATE</button>
                     </div>
                     <div class="col-2">
-                    
+
                         <form asp-action="Delete" asp-controller="Comments">
                             @Html.Hidden("Id", comment.Id)
                             @Html.Hidden("Slug", comment.Post.Slug)
                             <button class="btn-sm btn-dark font-weight-bold btn-block">DELETE</button>
                         </form>
                     </div>
+
                 </div>
+        
             }
 
         </div>
 
     </div>
-
-
     @*Modals*@
     <div class="modal" id="editModal">
         <div class="modal-dialog">
@@ -267,9 +280,11 @@
                 </div>
             </div>
         </div>
+
     </div>
+
 }
-</div>
+
 @section Scripts{
 
     <script>
