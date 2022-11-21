@@ -37,12 +37,12 @@
                 @foreach (var post in Model)
                 {
                     <div class="d-lg-flex post-entry-1 border-bottom border-dark">
-                        <a href="@post.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                        <a asp-action="Details" asp-route-slug="@post.Slug" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
                             <img src="@imageService.DecodeImage(post.ImageData,  post.ContentType)" alt="" class="img-fluid">
                         </a>
                         <div>
                             <div class="post-meta"><span class="date"></span> <span class="mx-1">&bullet;</span> <span>@post.Created.ToString("MMM dd, yyyy")</span></div>
-                            <h3><a href="single-post.html">@post.Title</a></h3>
+                            <h3><a asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h3>
                             <p>@post.Abstract</p>
                             <div class="d-flex align-items-center author mb-2">
                                 <div class="photo"><img src="@imageService.DecodeImage(post.BlogUser.ImageData, post.BlogUser.ContentType)" alt="" class="img-fluid"></div>
