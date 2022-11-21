@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using BlogProject.Enums;
 using X.PagedList;
 using BlogProject.ViewModels;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogProject.Controllers
 {
@@ -70,19 +70,15 @@ namespace BlogProject.Controllers
 
 
         // Blog Post Index
-        public async Task<IActionResult> BlogPostIndex(int? id, int? page)
+        [AllowAnonymous]
+        public async Task<IActionResult> BlogPostIndex(int? page)
         {
-            if(id is null)
-            {
-                return NotFound();
-            }
-
             var pageNumber = page ?? 1;
             var pageSize = 10;
 
             //var posts = _context.Posts.Where(p => p.BlogId == id).ToList();
-             var posts = await _context.Posts
-                .Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
+            var posts = await _context.Posts
+                .Include(b => b.BlogUser)                   
                 .OrderByDescending(p => p.Created)
                 .ToPagedListAsync(pageNumber, pageSize);
 

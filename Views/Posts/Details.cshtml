@@ -29,7 +29,7 @@
 
 
             </div><!-- End Single Post Content -->
-            <div class="col-md-3">
+            <div class="col-md-3 mt-3">
                 <div class="aside-block">
                     <h3 class="aside-title">Tags</h3>
                     <ul class="aside-tags list-unstyled">
@@ -129,11 +129,11 @@
             <br />
             @if (comment.Deleted is not null)
             {
-                <span class="small font-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName was deleted by the Moderator...</span>
+                <span class="font-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName was deleted by the Moderator...</span>
             }
             else if (comment.Moderated is not null)
             {
-                <span class="small font-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName has been Moderated...</span>
+                <span class="font-italic">The comment posted on @comment.Created.ToString("MMM dd, yyyy") by @comment.BlogUser.FullName has been Moderated...</span>
             }
 
             <hr />
@@ -161,7 +161,7 @@
             @if (comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == userManager.GetUserId(User))
             {
                 <hr>
-                <button data-bs-toggle="modal" data-bs-target="#editModal" class="btn-sm btn-dark float-right font-weight-bold">EDIT</button>
+                <button data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-dark">EDIT</button>
             }
 
             @****************************************************************
@@ -172,11 +172,12 @@
                 <hr>
                 <div class="row">
                     <div class="col-2">
-                        <button class="btn-sm btn-dark font-weight-bold btn-block" data-bs-toggle="modal" data-bs-target="#moderate">MODERATE</button>
+                        <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#moderate">MODERATE</button>
                     </div>
                     <div class="col-2">
+                    
                         <form asp-action="Delete" asp-controller="Comments">
-                            @Html.Hidden("CommentId", comment.Id)
+                            @Html.Hidden("Id", comment.Id)
                             @Html.Hidden("Slug", comment.Post.Slug)
                             <button class="btn-sm btn-dark font-weight-bold btn-block">DELETE</button>
                         </form>
@@ -207,13 +208,13 @@
                             <textarea name="Body" class="form-control" required>@comment.Body</textarea>
                         </div>
 
-                        <button class="btn-sm btn-dark border-success font-weight-bold" type="submit">SUBMIT</button>
+                        <button class="btn-dark mt-2" type="submit">Submit</button>
                     </form>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn-sm btn-dark font-weight-bold" data-dismiss="modal">CLOSE</button>
+                    <button type="button" class="btn-dark mt-2" data-bs-dismiss="modal">Close</button>
                 </div>
 
             </div>

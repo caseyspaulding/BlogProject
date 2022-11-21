@@ -135,29 +135,7 @@
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="post-entry-1 border-bottom">
-            @foreach (var blog in Model)
-            {
-                <div class="">
-                    <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-id="@blog.Id" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                        <img src="@blog" alt="" class="img-fluid">
-                    </a>
-                    <div>
-                        <div class="post-meta"> <span class="mx-1">&bullet;</span> <span>@blog.Created.ToString("MMM dd, yyyy")</span></div>
-                        <h3><a href="single-post.html">@blog.Image</a></h3>
-                        <p>@blog.Name</p>
-                        <div class="d-flex align-items-center author">
-                            <div class="photo"><img class="m-3 mt-3 rounded-circle" style="width:80px;" src="<!--Image-->" /></div>
-                            <div class="name">
-                                <h3 class="m-0 p-0">@blog.BlogUser.FullName  </h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            }
-        </div>
+    
 
         <!-- Paging Controls -->
         <div class="row">
@@ -177,9 +155,9 @@
             </div>
         </div>
 
-    </div>
-    </div>
-    </div>
+   </div>
+  </div>
+</div>
 
    
 

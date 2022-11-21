@@ -36,5 +36,7 @@ namespace BlogProject.Models
         public virtual Post Post { get; set; }
         public virtual BlogUser BlogUser { get; set; }
         public virtual BlogUser Moderator { get; set; }
+
+       
     }
 }

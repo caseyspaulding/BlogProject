@@ -101,7 +101,7 @@ namespace BlogProject
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Posts}/{action=BlogPostIndex}/{id?}");
 
 
 

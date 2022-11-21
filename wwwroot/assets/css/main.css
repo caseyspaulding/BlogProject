@@ -16,10 +16,7 @@ div.swal2-container.swal2-center.swal2-backdrop-show > div {
     border: 2px solid #0026ff;
 }
 
-.modal-backdrop {
-    /* bug fix - no overlay */
-    display: none;
-}
+
 :root {
   scroll-behavior: smooth;
 }
@@ -143,7 +140,7 @@ section {
 }
 
 .header.sticked {
-  height: 70px;
+  height: 50px;
 }
 
 .header .logo img {
@@ -292,7 +289,7 @@ section {
     z-index: 99;
     opacity: 0;
     visibility: hidden;
-    background: var(--color-white);
+    background: var(--color-black);
     box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
     transition: 0.3s;
     border-radius: 4px;
@@ -369,7 +366,7 @@ section {
     padding: 10px 0;
     margin: 0;
     border-radius: 10px;
-    background-color: var(--color-white);
+    background-color: var(--color-black);
     overflow-y: auto;
     transition: 0.3s;
     z-index: 9998;
@@ -410,7 +407,7 @@ section {
     z-index: 99;
     padding: 10px 0;
     margin: 10px 20px;
-    background: var(--color-white);
+    background: var(--color-black);
     transition: all 0.5s ease-in-out;
     box-shadow: 0px 0px 30px rgba(var(--color-black-rgb), 0.1);
   }
@@ -442,7 +439,7 @@ section {
     top: 15px;
     right: 15px;
     z-index: 9999;
-    color: var(--color-white);
+    color: var(--color-black);
   }
 
   .mobile-nav-active .navbar {
