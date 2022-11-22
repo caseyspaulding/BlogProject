@@ -1,4 +1,5 @@
-﻿let index = 0;
+﻿
+let index = 0;
 
 function AddTag() {
     //Get a reference to the TagEntry input element
@@ -18,7 +19,7 @@ function AddTag() {
         document.getElementById("TagList").options[index++] = newOption;
     }
 
-    
+
     //Clear out the TagEntry control box
     tagEntry.value = "";
     return true;

@@ -10,10 +10,17 @@
 
 @inject UserManager<BlogUser> userManager
 @inject IImageService imageService
+@inject SignInManager<BlogUser> SignInManager
+@inject UserManager<BlogUser> UserManager
+
+@{
+    BlogUser blogUser = await UserManager.GetUserAsync(User);
+}
 
 @{
     ViewData["Title"] = "Home Page";
 }
+
 
 
 <section class="">
@@ -23,10 +30,10 @@
 
             <div class="date">Casey Spaulding's Web Log</div>
             <div class="date">@DateTime.Now.ToString("MMM dd, yyyy")</div>
-            
+
         </div>
         <div class="text-center section-header">
-           
+
         </div>
         <div class="text-center section-header mt-2">
             <h1>Code Talk</h1>

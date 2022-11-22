@@ -1,4 +1,11 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<BlogUser> SignInManager
+@inject UserManager<BlogUser> UserManager
+
+@{
+    BlogUser blogUser = await UserManager.GetUserAsync(User);
+}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,54 +49,72 @@
 <body>
 
     <!-- ======= Header ======= -->
-    <header id="header" class="header d-flex align-items-center navShadow fixed-top bg-black text-white">
-        <div class="container-xl d-flex align-items-center justify-content-between">
-            <a class="logo d-flex align-items-center" asp-controller="Posts" asp-action="BlogPostIndex">
+    <header id="header" class="header d-flex align-items-center fixed-top ">
+        <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
+            <a class="logo d-flex align-items-center" asp-controller="Posts" asp-action="BlogPostIndex">
                 <img src="~/assets/img/topLogo.png" alt="">
-                <h1 class="text-light"></h1>
+
             </a>
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Posts" asp-action="BlogPostIndex">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Home" asp-action="About">About</a></li>
-                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Posts" asp-action="BlogPostIndex">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     @if (User.IsInRole("Administrator"))
                     {
-                    <li class="nav-item"><a class="nav-link text-light" asp-controller="Posts" asp-action="Create">Create Post</a></li>
-                    }
+        <li class="nav-item"><a class="nav-link" asp-controller="Posts" asp-action="Create">Create Post</a></li>
+}
 
-                     <partial name="_LoginPartial" />
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                Hello @blogUser.FirstName!
+            </a>
+        </li>
+                        <li class="nav-item">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="btn nav-link">Logout</button>
+                            </form>
+                        </li> }
+                                    else
+                                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                                        </li>}
+
                 </ul>
-                  
             </nav><!-- .navbar -->
 
-            <!--<div class="position-fixed">-->
-                <!--Position fixed in div class-->
-                <!--<a href="#" class="mx-2"><span class="text-light bi-linkedin"></span></a>
-                <a href="#" class="mx-2"><span class="text-light bi-twitter"></span></a>-->
+            <div class="position-relative">
+                <a href="#" class="mx-2"><span class="bi-facebook"></span></a>
+                <a href="#" class="mx-2"><span class="bi-twitter"></span></a>
+                <a href="#" class="mx-2"><span class="bi-instagram"></span></a>
 
-                <a asp-action="SearchIndex" asp-controller="Posts" class="text-light mx-2 js-search-open"><span class=""></span></a>
-                <i class="bi bi-list mobile-nav-toggle text-light"></i>
+                <a href="#" class="mx-2 js-search-open"><span class="bi-search"></span></a>
+                <i class="bi bi-list mobile-nav-toggle"></i>
 
                 <!-- ======= Search Form ======= -->
                 <div class="search-form-wrap js-search-form-wrap">
-                    <form asp-action="SearchIndex" asp-controller="Posts">
-                        <input type="text" name="SearchTerm" class="form-control" placeholder="Search Term">
-                        <button class="btn js-search-close" type="submit"><span class="bi-x"></span></button>
+                    <form action="search-result.html" class="search-form">
+                        <span class="icon bi-search"></span>
+                        <input type="text" placeholder="Search" class="form-control">
+                        <button class="btn js-search-close"><span class="bi-x"></span></button>
                     </form>
-                </div>
-                <!-- End Search Form -->
+                </div><!-- End Search Form -->
 
             </div>
 
         </div>
 
-    </header>
-    <!-- Page header with logo and tagline-->
-    <!-- End Header -->
-    <!-- Page content-->
+    </header><!-- End Header -->
+
     <section class="mt-5">
         <div class="container">
 

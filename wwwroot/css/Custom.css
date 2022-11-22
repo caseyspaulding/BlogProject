@@ -1,15 +1,11 @@
-﻿
+﻿/*border sweet alert window */
 
-/*border sweet alert window */
-
-div.swal2-container.swal2-center.swal2-backdrop-show> div {
-
+div.swal2-container.swal2-center.swal2-backdrop-show > div {
     outline: 4px solid black;
-    border: 2px solid #0026ff;
-
+    border: 2px solid #808080;
 }
 
-.page-item.active .page-link{
+.page-item.active .page-link {
     background-color: black;
     border-color: grey;
 }
