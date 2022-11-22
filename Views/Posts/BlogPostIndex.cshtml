@@ -52,7 +52,11 @@
                             <h3><a asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h3>
                             <p>@post.Abstract</p>
                             <div class="d-flex align-items-center author mb-2">
-                                <div class="photo"><img src="@imageService.DecodeImage(post.BlogUser.ImageData, post.BlogUser.ContentType)" alt="" class="img-fluid"></div>
+                                <div class="photo"><img src="@imageService.DecodeImage(post.BlogUser.ImageData, post.BlogUser.ContentType)"
+                                                        alt="@post.BlogUser.FullName"
+                                                        class="rounded-pill img-thumbnail img-fluid" 
+                                                        style="width:60px;">
+                                </div>
                                 <div class="">
                                     <h5 class="m-0 p-0">@post.BlogUser.FullName</h5>
                                 </div>
@@ -99,3 +103,17 @@
         })
     </div>
 </div>
+
+@section Scripts{
+
+    <script>
+        function myFunction(e) {
+            if ((e && e.keyCode == 13) || e == 0) {
+                alert("The form was submitted");
+                document.forms.form01.submit();
+                document.forms.form01.fname.value = ""; // could be form01.reset as well
+            }
+        }
+    </script>
+
+}

@@ -76,7 +76,7 @@
                         </li>
                         <li class="nav-item">
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
-                                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                  asp-route-returnUrl="@Url.Action("BlogPostIndex", "Posts", new { area = "" })">
                                 <button type="submit" class="btn fw-bold">Logout</button>
                             </form>
                         </li> }
@@ -93,20 +93,40 @@
             </nav><!-- .navbar -->
 
             <div class="position-relative">
-                <a href="#" class="mx-2"><span class="bi-facebook"></span></a>
+                <a href="#" class="mx-2"><span class="bi-linkedin"></span></a>
                 <a href="#" class="mx-2"><span class="bi-twitter"></span></a>
-                <a href="#" class="mx-2"><span class="bi-instagram"></span></a>
+                
 
                 <a href="#" class="mx-2 js-search-open"><span class="bi-search"></span></a>
                 <i class="bi bi-list mobile-nav-toggle"></i>
 
                 <!-- ======= Search Form ======= -->
-                <div class="search-form-wrap js-search-form-wrap">
-                    <form action="search-result.html" class="search-form">
-                        <span class="icon bi-search"></span>
-                        <input type="text" placeholder="Search" class="form-control">
-                        <button class="btn js-search-close"><span class="bi-x"></span></button>
-                    </form>
+                <div class="search-form-wrap js-search-form-wrap bi-arrow-return-left myfunction(event)">
+
+                    
+                       
+                    
+
+                   
+
+
+                    
+                    <form asp-action="SearchIndex" asp-controller="Posts" class="search-form">
+                        <span class=""></span>
+                        
+                            <button class="btn-close js-search-close" type="submit"></button>
+                     
+                            
+                            <input type="text" name="SearchTerm" class="form-control" placeholder="Search Term">
+
+                           
+                                <button class="js-search btn btn-outline-dark mb-2" type="submit">Search</button>
+
+                          
+                            
+                       
+                        <button class="js-search btn" type="submit">Search</button>
+                  </form>
                 </div><!-- End Search Form -->
 
             </div>

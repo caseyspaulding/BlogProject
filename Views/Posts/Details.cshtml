@@ -34,7 +34,13 @@
                 <!-- ======= Single Post Content ======= -->
                 @Html.Raw(Model.Post.Content)
                 <div class="d-flex align-items-center author mb-2">
-                    <div class="photo"><img src="@imageService.DecodeImage(Model.Post.BlogUser.ImageData, Model.Post.BlogUser.ContentType)" alt="" class="img-fluid"></div>
+                    <div class="photo">
+                        <img src="@imageService.DecodeImage(Model.Post.BlogUser.ImageData, Model.Post.BlogUser.ContentType)"
+                             alt="@Model.Post.BlogUser.FullName"
+                             class="rounded-pill img-thumbnail img-fluid" style="width:60px;">
+                        
+
+                    </div>
                     <div class="">
                         <h5 class="m-0 p-0">@Model.Post.BlogUser.FullName</h5>
                     </div>
