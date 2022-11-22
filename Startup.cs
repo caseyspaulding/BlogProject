@@ -1,4 +1,5 @@
 using BlogProject.Data;
+using BlogProject.Helpers;
 using BlogProject.Models;
 using BlogProject.Services;
 using BlogProject.ViewModels;
@@ -16,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheBlogProject.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BlogProject
 {
@@ -27,6 +29,7 @@ namespace BlogProject
         }
 
         public IConfiguration Configuration { get; }
+     
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

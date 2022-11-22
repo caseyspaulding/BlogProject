@@ -1,5 +1,7 @@
 using BlogProject.Helpers;
 using BlogProject.Services;
+using BlogProject.Data;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BlogProject
 {
@@ -17,6 +20,7 @@ namespace BlogProject
     {
         public static async Task Main(string[] args)
         {
+
             
 
             //CreateHostBuilder(args).Build().Run();
