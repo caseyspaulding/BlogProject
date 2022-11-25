@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace BlogProject.ViewModels;
 
-namespace BlogProject.ViewModels
+public class MailSettings
 {
-    public class MailSettings
-    {
-        //Mail settings from Gmail email server
-        public string Mail { get; set; }
-        public string DisplayName { get; set; }
-        public string Password { get; set; }
-        public string Host { get; set; }
-        public int Port { get; set; }
+    //Mail settings from Gmail email server
+    public string Mail { get; set; }
+    public string DisplayName { get; set; }
+    public string Password { get; set; }
+    public string Host { get; set; }
+    public int Port { get; set; }
 
 
-    }
 }

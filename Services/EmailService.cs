@@ -8,62 +8,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlogProject.Services
+namespace BlogProject.Services;
+
+public class EmailService : IBlogEmailSender
 {
-    public class EmailService : IBlogEmailSender
+    private readonly MailSettings _mailSettings;
+
+    public EmailService(IOptions<MailSettings> mailSettings)
     {
-        private readonly MailSettings _mailSettings;
+        _mailSettings = mailSettings.Value;
+    }
 
-        public EmailService(IOptions<MailSettings> mailSettings)
+    public async Task SendContactEmailAsync(string emailFrom, string name, string subject, string htmlMessage)
+    {
+        var email = new MimeMessage();
+        email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+        email.To.Add(MailboxAddress.Parse(_mailSettings.Mail));
+        email.Subject = subject;
+
+        var builder = new BodyBuilder();
+        builder.HtmlBody = $"<b>{name}</b> has sent you an email and can be reached at: <b>{emailFrom}</b><br/><br/>{htmlMessage}";
+
+        email.Body = builder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+        smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+
+        await smtp.SendAsync(email);
+
+        smtp.Disconnect(true);
+    }
+
+    public async Task SendEmailAsync(string emailTo, string subject, string htmlMessage)
+    {
+        var email = new MimeMessage();
+        email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+        email.To.Add(MailboxAddress.Parse(emailTo));
+        email.Subject = subject;
+
+        var builder = new BodyBuilder()
         {
-            _mailSettings = mailSettings.Value;
-        }
+            HtmlBody = htmlMessage
+        };
 
-        public async Task SendContactEmailAsync(string emailFrom, string name, string subject, string htmlMessage)
-        {
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(_mailSettings.Mail));
-            email.Subject = subject;
+        email.Body = builder.ToMessageBody();
 
-            var builder = new BodyBuilder();
-            builder.HtmlBody = $"<b>{name}</b> has sent you an email and can be reached at: <b>{emailFrom}</b><br/><br/>{htmlMessage}";
+        using var smtp = new SmtpClient();
+        smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+        smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
 
-            email.Body = builder.ToMessageBody();
+        await smtp.SendAsync(email);
 
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+        smtp.Disconnect(true);
 
-            await smtp.SendAsync(email);
-
-            smtp.Disconnect(true);
-        }
-
-        public async Task SendEmailAsync(string emailTo, string subject, string htmlMessage)
-        {
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(emailTo));
-            email.Subject = subject;
-
-            var builder = new BodyBuilder()
-            {
-                HtmlBody = htmlMessage
-            };
-
-            email.Body = builder.ToMessageBody();
-
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-
-            await smtp.SendAsync(email);
-
-            smtp.Disconnect(true);
-
-
-        }
 
     }
+
 }

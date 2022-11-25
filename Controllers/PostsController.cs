@@ -1,346 +1,345 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BlogProject.Data;
+using BlogProject.Enums;
+using BlogProject.Models;
+using BlogProject.Services;
+using BlogProject.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BlogProject.Data;
-using BlogProject.Models;
-using BlogProject.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using BlogProject.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using X.PagedList;
-using BlogProject.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 
-namespace BlogProject.Controllers
+namespace BlogProject.Controllers;
+
+public class PostsController : Controller
 {
-    public class PostsController : Controller
-    {
-        private readonly ApplicationDbContext _context;
-        private readonly ISlugService _slugService;
-        private readonly IImageService _imageService;
-        private readonly UserManager<BlogUser> _userManager;
-        private readonly BlogSearchService _blogSearchService;
+    private readonly ApplicationDbContext _context;
+    private readonly ISlugService _slugService;
+    private readonly IImageService _imageService;
+    private readonly UserManager<BlogUser> _userManager;
+    private readonly BlogSearchService _blogSearchService;
 
-        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService)
+    public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService)
+    {
+        _context = context;
+        _slugService = slugService;
+        _imageService = imageService;
+        _userManager = userManager;
+        _blogSearchService = blogSearchService;
+    }
+
+    public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
+    {
+        ViewData["SearchTerm"] = searchTerm;
+
+        var pageNumber = page ?? 1;
+        var pageSize = 10;
+
+        var posts = _context.Posts.Where(p => p.ReadyStatus == ReadyStatus.ProductionReady).AsQueryable();
+        if (searchTerm != null)
         {
-            _context = context;
-            _slugService = slugService;
-            _imageService = imageService;
-            _userManager = userManager;
-            _blogSearchService = blogSearchService;
+            posts = posts.Where(
+                p => !(!p.Title.Contains(searchTerm) &&
+!p.Abstract.Contains(searchTerm) &&
+!p.Content.Contains(searchTerm) &&
+!p.Comments.Any(c => c.Body.Contains(searchTerm) ||
+                                    c.ModeratedBody.Contains(searchTerm) ||
+                                    c.BlogUser.FirstName.Contains(searchTerm) ||
+                                    c.BlogUser.LastName.Contains(searchTerm) ||
+                                    c.BlogUser.Email.Contains(searchTerm))));
         }
 
-        public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
+        posts = posts.OrderByDescending(p => p.Created);
+        return View(await posts.ToPagedListAsync(pageNumber, pageSize));
+
+
+    }
+
+    // GET: Posts
+    public async Task<IActionResult> Index()
+    {
+        var applicationDbContext = _context.Posts.Include(p => p.Blog).Include(p => p.BlogUser);
+        return View(await applicationDbContext.ToListAsync());
+    }
+
+
+    // Blog Post Index
+    [AllowAnonymous]
+    public async Task<IActionResult> BlogPostIndex(int? page)
+    {
+        var pageNumber = page ?? 1;
+        var pageSize = 10;
+
+        //var posts = _context.Posts.Where(p => p.BlogId == id).ToList();
+        var posts = await _context.Posts
+            .Include(b => b.BlogUser)
+            .OrderByDescending(p => p.Created)
+            .ToPagedListAsync(pageNumber, pageSize);
+
+        return View(posts);
+    }
+
+
+
+    // GET: Posts/DetailsView /5
+    public async Task<IActionResult> Details(string slug)
+    {
+        ViewData["Title"] = "Post Details Page";
+
+        if (string.IsNullOrEmpty(slug)) return NotFound();
+
+        var post = await _context.Posts
+            .Include(p => p.BlogUser)
+            .Include(p => p.Tags)
+            .ThenInclude(c => c.BlogUser)
+            .Include(p => p.Comments)
+            .ThenInclude(c => c.BlogUser)
+            //.ThenInclude(c => c.Moderator)
+            .FirstOrDefaultAsync(m => m.Slug == slug);
+
+        if (post == null) return NotFound();
+
+        var dataVM = new PostDetailViewModel()
         {
-            ViewData["SearchTerm"] = searchTerm;
+            Post = post,
+            Tags = _context.Tags
+                    .Select(t => t.Text.ToLower())
+                    .Distinct().ToList()
 
-            var pageNumber = page ?? 1;
-            var pageSize = 10;
+        };
 
-            var posts = _context.Posts.Where(p => p.ReadyStatus == ReadyStatus.ProductionReady).AsQueryable();
-            if(searchTerm != null)
+        ViewData["HeaderImage"] = _imageService.DecodeImage(post.ImageData, post.ContentType);
+        ViewData["MainText"] = post.Title;
+        ViewData["SubTest"] = post.Abstract;
+
+        return View(dataVM);
+    }
+
+    // GET: Posts/Create
+    public IActionResult Create()
+    {
+        ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name");
+        ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
+        return View();
+    }
+
+    // POST: Posts/Create
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post, List<string> tagValues)
+    {
+        if (ModelState.IsValid)
+        {
+            post.Created = DateTime.Now;
+
+            var authorId = _userManager.GetUserId(User);
+            post.BlogUserId = authorId;
+
+            //Use the _imageService to stroe the incoming user image
+            post.ImageData = await _imageService.EncodeImageAsync(post.Image);
+            post.ContentType = _imageService.ContentType(post.Image);
+
+            //Create the slug and determine if it is unique
+            var slug = _slugService.UrlFriendly(post.Title);
+
+            // create a variable to store if an error has occurred
+            var validationError = false;
+
+            if (string.IsNullOrEmpty(slug))
             {
-                posts = posts.Where(
-                    p => p.Title.Contains(searchTerm) ||
-                    p.Abstract.Contains(searchTerm) ||
-                    p.Content.Contains(searchTerm) ||
-                    p.Comments.Any(c => c.Body.Contains(searchTerm) ||
-                                        c.ModeratedBody.Contains(searchTerm) ||
-                                        c.BlogUser.FirstName.Contains(searchTerm) ||
-                                        c.BlogUser.LastName.Contains(searchTerm) ||
-                                        c.BlogUser.Email.Contains(searchTerm)));
+                validationError = true;
+                ModelState.AddModelError("Title", "The Title you provided cannot be used because it results in an empty slug");
+
             }
 
-            posts = posts.OrderByDescending(p => p.Created);
-            return View(await posts.ToPagedListAsync(pageNumber, pageSize));
-            
-            
-        }
-        
-        // GET: Posts
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Posts.Include(p => p.Blog).Include(p => p.BlogUser);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
-
-        // Blog Post Index
-        [AllowAnonymous]
-        public async Task<IActionResult> BlogPostIndex(int? page)
-        {
-            var pageNumber = page ?? 1;
-            var pageSize = 10;
-
-            //var posts = _context.Posts.Where(p => p.BlogId == id).ToList();
-            var posts = await _context.Posts
-                .Include(b => b.BlogUser)                   
-                .OrderByDescending(p => p.Created)
-                .ToPagedListAsync(pageNumber, pageSize);
-
-            return View(posts);
-        }
-
-
-
-        // GET: Posts/DetailsView /5
-        public async Task<IActionResult> Details(string slug)
-        {
-            ViewData["Title"] = "Post Details Page";
-
-            if (string.IsNullOrEmpty(slug)) return NotFound();
-            
-            var post = await _context.Posts
-                .Include(p => p.BlogUser)
-                .Include(p => p.Tags)
-                .ThenInclude(c => c.BlogUser)
-                .Include(p => p.Comments)
-                .ThenInclude(c => c.BlogUser)
-                //.ThenInclude(c => c.Moderator)
-                .FirstOrDefaultAsync(m => m.Slug == slug);
-
-            if (post == null) return NotFound();
-
-            var dataVM = new PostDetailViewModel()
+            else if (!_slugService.IsUnique(slug))
             {
-                Post = post,
-                Tags = _context.Tags
-                        .Select(t => t.Text.ToLower())
-                        .Distinct().ToList()
+                validationError = true;
+                ModelState.AddModelError("Title", "The Title you provided has already been used. Please use another title.");
 
-            };
+            }
 
-            ViewData["HeaderImage"] = _imageService.DecodeImage(post.ImageData, post.ContentType);
-            ViewData["MainText"] = post.Title;
-            ViewData["SubTest"] = post.Abstract;
 
-            return View(dataVM);
-        }
-
-        // GET: Posts/Create
-        public IActionResult Create()
-        {
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name");
-            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
-        }
-
-        // POST: Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post, List<string> tagValues)
-        {
-            if (ModelState.IsValid)
+            if (validationError)
             {
-                post.Created = DateTime.Now;
+                ViewData["TagValues"] = string.Join(",", tagValues);
+                return View(post);
+            }
 
-                var authorId = _userManager.GetUserId(User);
-                post.BlogUserId = authorId;
+            post.Slug = slug;
 
-                //Use the _imageService to stroe the incoming user image
-                post.ImageData = await _imageService.EncodeImageAsync(post.Image);
-                post.ContentType = _imageService.ContentType(post.Image);
+            _context.Add(post);
+            await _context.SaveChangesAsync();
 
-                //Create the slug and determine if it is unique
-                var slug = _slugService.UrlFriendly(post.Title);
+            //How do I loop over the incoming list of string?
 
-                // create a variable to store if an error has occurred
-                var validationError = false;
-
-                if (string.IsNullOrEmpty(slug))
+            foreach (var tagText in tagValues)
+            {
+                _context.Add(new Tag()
                 {
-                    validationError = true;
-                    ModelState.AddModelError("Title", "The Title you provided cannot be used because it results in an empty slug");
-                    
+                    PostId = post.Id,
+                    BlogUserId = authorId,
+                    Text = tagText
+
+                });
+
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
+
+        return View(post);
+    }
+
+    // GET: Posts/Edit VIEW /5
+    public async Task<IActionResult> Edit(string slug)
+    {
+        if (slug == null)
+        {
+            return NotFound();
+        }
+
+        var post = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
+
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", post.BlogId);
+        ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
+
+        return View(post);
+    }
+
+    // POST: Posts/Edit/5
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile newImage, List<string> tagValues)
+    {
+        if (id != post.Id)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                // newpost is the originalPost..called newpost because its an edit
+                var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
+
+                newPost.Updated = DateTime.Now;
+                newPost.Title = post.Title;
+                newPost.Abstract = post.Abstract;
+                newPost.Content = post.Content;
+                newPost.ReadyStatus = post.ReadyStatus;
+
+                var newSlug = _slugService.UrlFriendly(post.Title);
+                if (newSlug != newPost.Slug)
+                {
+                    if (_slugService.IsUnique(newSlug))
+                    {
+                        newPost.Title = post.Title;
+                        newPost.Slug = newSlug;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Title", "This Title cannot be used because it is a duplicate slug.");
+                        ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
+                        return View(post);
+                    }
                 }
 
-                
-                else if (!_slugService.IsUnique(slug))
+                if (newImage is not null)
                 {
-                    validationError = true;
-                    ModelState.AddModelError("Title", "The Title you provided has already been used. Please use another title.");
-                    
+                    newPost.ImageData = await _imageService.EncodeImageAsync(newImage);
+                    newPost.ContentType = _imageService.ContentType(newImage);
                 }
 
-                
-                if (validationError)
-                {
-                    ViewData["TagValues"] = string.Join(",", tagValues);
-                    return View(post);
-                }
+                //Remove all Old Tags associated with this post
+                _context.Tags.RemoveRange(newPost.Tags);
 
-                post.Slug = slug;
+                //Add new tags from Edit form
 
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-
-                //How do I loop over the incoming list of string?
-
-                foreach(var tagText in tagValues)
+                foreach (var tagText in tagValues)
                 {
                     _context.Add(new Tag()
                     {
                         PostId = post.Id,
-                        BlogUserId = authorId,
+                        BlogUserId = newPost.BlogUserId,
                         Text = tagText
-
                     });
-
                 }
 
                 await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
             }
-
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
-            
-            return View(post);
-        }
-
-        // GET: Posts/Edit VIEW /5
-        public async Task<IActionResult> Edit(string slug)
-        {
-            if (slug == null)
+            catch (DbUpdateConcurrencyException)
             {
-                return NotFound();
-            }
-
-            var post = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
-            
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", post.BlogId);
-            ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
-            
-            return View(post);
-        }
-
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus")] Post post, IFormFile newImage, List<string> tagValues)
-        {
-            if (id != post.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (!PostExists(post.Id))
                 {
-                    // newpost is the originalPost..called newpost because its an edit
-                    var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
-
-                    newPost.Updated = DateTime.Now;
-                    newPost.Title = post.Title;
-                    newPost.Abstract = post.Abstract;
-                    newPost.Content = post.Content;
-                    newPost.ReadyStatus = post.ReadyStatus;
-
-                    var newSlug = _slugService.UrlFriendly(post.Title);
-                    if(newSlug  != newPost.Slug)
-                    {
-                        if(_slugService.IsUnique(newSlug))
-                        {
-                            newPost.Title = post.Title;
-                            newPost.Slug = newSlug;
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("Title", "This Title cannot be used because it is a duplicate slug.");
-                            ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
-                            return View(post);
-                        }
-                    }
-
-                    if(newImage is not null)
-                    {
-                        newPost.ImageData = await _imageService.EncodeImageAsync(newImage);
-                        newPost.ContentType = _imageService.ContentType(newImage);
-                    }
-
-                    //Remove all Old Tags associated with this post
-                    _context.Tags.RemoveRange(newPost.Tags);
-
-                    //Add new tags from Edit form
-
-                    foreach(var tagText in tagValues)
-                    {
-                        _context.Add(new Tag() 
-                        {
-                            PostId = post.Id,
-                            BlogUserId = newPost.BlogUserId,
-                            Text = tagText
-                        });
-                    }
-
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
-            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", post.BlogUserId);
-            return View(post);
-        }
-
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(string slug)
-        {
-            if (slug == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .Include(p => p.Blog)
-                .Include(p => p.BlogUser)
-                .FirstOrDefaultAsync(m => m.Slug == slug);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            return View(post);
-        }
-
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", post.BlogId);
+        ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", post.BlogUserId);
+        return View(post);
+    }
 
-        private bool PostExists(int id)
+    // GET: Posts/Delete/5
+    public async Task<IActionResult> Delete(string slug)
+    {
+        if (slug == null)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            return NotFound();
         }
+
+        var post = await _context.Posts
+            .Include(p => p.Blog)
+            .Include(p => p.BlogUser)
+            .FirstOrDefaultAsync(m => m.Slug == slug);
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        return View(post);
+    }
+
+    // POST: Posts/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var post = await _context.Posts.FindAsync(id);
+        _context.Posts.Remove(post);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    private bool PostExists(int id)
+    {
+        return _context.Posts.Any(e => e.Id == id);
     }
 }

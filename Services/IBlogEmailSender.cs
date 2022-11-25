@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlogProject.Services
+namespace BlogProject.Services;
+
+public interface IBlogEmailSender : IEmailSender
 {
-    public interface IBlogEmailSender : IEmailSender
-    {
-        Task SendContactEmailAsync(string emailFrom, string name, string subject, string htmlMessage);
-    }
+    Task SendContactEmailAsync(string emailFrom, string name, string subject, string htmlMessage);
 }

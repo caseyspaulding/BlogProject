@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlogProject.Enums
+namespace BlogProject.Enums;
+
+public enum BlogRole
 {
-    public enum BlogRole
-    {
-        Administrator,
-        Moderator
-           
-    }
+    Administrator,
+    Moderator
+       
 }
