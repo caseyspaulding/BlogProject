@@ -16,7 +16,7 @@ public static class DataHelper
         var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
 
         //Migration: This is the programmatic equivalent to Update-Database
-        //await dbContextSvc.Database.MigrateAsync();
+        await dbContextSvc.Database.MigrateAsync();
     }
 
 

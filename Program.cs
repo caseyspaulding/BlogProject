@@ -31,8 +31,10 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
    options.UseNpgsql(connectionString));
+
 //Register my custom DataService class
 builder.Services.AddScoped<DataService>();
 builder.Services.AddScoped<BlogSearchService>();
