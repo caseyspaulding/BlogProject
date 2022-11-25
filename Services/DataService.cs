@@ -27,7 +27,7 @@ public class DataService
     public async Task ManageDateAsync()
     {
         //Task: Create the DB from the Migrations
-        //await _dbContext.Database.MigrateAsync();
+        await _dbContext.Database.MigrateAsync();
 
         // Task 1: Seed a few Roles into the system
         await SeedRolesAsync();

@@ -69,7 +69,7 @@ var dataService = app.Services
                        .ServiceProvider
                        .GetRequiredService<DataService>();
 
-//await dataService.ManageDateAsync();
+await dataService.ManageDateAsync();
 
 
 if (app.Environment.IsDevelopment())
