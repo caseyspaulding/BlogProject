@@ -15,17 +15,14 @@ using BlogProject.Helpers;
 var builder = WebApplication.CreateBuilder(args);
 
 //Adding controller support
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
+//var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
 
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-//var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultUI()
@@ -36,6 +33,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
    options.UseNpgsql(connectionString));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Register my custom DataService class
 builder.Services.AddScoped<DataService>();
