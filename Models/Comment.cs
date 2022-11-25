@@ -38,5 +38,4 @@ namespace BlogProject.Models
         public virtual BlogUser Moderator { get; set; }
 
        
-    }
-}
+
