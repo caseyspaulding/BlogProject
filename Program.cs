@@ -19,12 +19,14 @@ builder.Services.AddControllers();
 
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-//var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
+var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+
+//var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultUI()
                .AddDefaultTokenProviders()
@@ -57,11 +59,9 @@ builder.Services.AddScoped<ISlugService, BasicSlugService>();
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();
-
-// database update with the latest migrations
 await DataHelper.ManageDataAsync(scope.ServiceProvider);
 
-
+// database update with the latest migrations
 
 //Pull out my registered DataService
 var dataService = app.Services
@@ -69,7 +69,7 @@ var dataService = app.Services
                        .ServiceProvider
                        .GetRequiredService<DataService>();
 
-await dataService.ManageDateAsync();
+//await dataService.ManageDateAsync();
 
 
 if (app.Environment.IsDevelopment())
