@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-	  <Nullable>disable</Nullable>
-	  <ImpliciteUsings>enable</ImpliciteUsings>
+	<Nullable>disable</Nullable>
+	<ImpliciteUsings>enable</ImpliciteUsings>
     <UserSecretsId>aspnet-BlogProject-48C3A131-B5D2-497E-B4BB-0783925C7F62</UserSecretsId>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
-    <ApplicationIcon />
-    <OutputType>WinExe</OutputType>
-    <StartupObject />
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	  <InvariantGlobalization>true</InvariantGlobalization>
+	<InvariantGlobalization>true</InvariantGlobalization>
+	  
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,9 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.0" />
-	  
-	  
+	<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.0" />
     <PackageReference Include="MimeKit" Version="3.4.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
     <PackageReference Include="X.PagedList" Version="8.4.3" />

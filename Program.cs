@@ -12,32 +12,27 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using BlogProject.Helpers;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 //Adding controller support
 builder.Services.AddControllers();
 
-
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
+//var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-   options.UseNpgsql(connectionString));
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultUI()
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+   options.UseNpgsql(connectionString));
 //Register my custom DataService class
 builder.Services.AddScoped<DataService>();
 builder.Services.AddScoped<BlogSearchService>();
