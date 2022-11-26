@@ -18,12 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 //Adding controller support
 builder.Services.AddControllers();
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-//var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
+var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
 
-var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+//var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultUI()

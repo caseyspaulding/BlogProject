@@ -30,7 +30,7 @@
             <div class="date">
                 @DateTime.Now.ToString("hh:mm:ss tt")
             </div>
-            <div class="date">@DateTime.Now.DayOfWeek.ToString() @DateTime.Now.ToString("MMM dd, yyyy")</div>
+            <div class="date">@DateTime.UtcNow.DayOfWeek.ToString() @DateTime.UtcNow.ToString("MMM dd, yyyy")</div>
 
         </div>
         <div class="text-center section-header">
@@ -45,10 +45,7 @@
 
                 
             </div>
-            
-
-
-            
+         
 
         </div>
 

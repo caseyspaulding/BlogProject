@@ -7,7 +7,12 @@ namespace BlogProject.Services;
 
 public class BlogSearchService
 {
-    private readonly ApplicationDbContext? _context;
+    private readonly ApplicationDbContext _context;
+
+    public BlogSearchService(ApplicationDbContext context)
+    {
+        _context = context;
+    }
 
     public IQueryable<Post> Search(string searchTerm)
     {
@@ -29,6 +34,7 @@ public class BlogSearchService
         }
 
         return posts = posts.OrderByDescending(p => p.Created);
+        
 
     }
 
