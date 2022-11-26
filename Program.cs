@@ -33,6 +33,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
    options.UseNpgsql(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Register my custom DataService class
@@ -70,17 +71,18 @@ var dataService = app.Services
 await dataService.ManageDateAsync();
 
 
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
 }
+//else
+//{
+//    app.UseExceptionHandler("/Home/Error");
+//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//    app.UseHsts();
+//}
 
 app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");
 
@@ -96,5 +98,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Posts}/{action=BlogPostIndex}/{id?}");
 app.MapRazorPages();
+
+//var app = CreateHostBuilder(args).Build();
+//var scope = app.Services.CreateScope();
+//await DataHelper.ManageDataAsync(scope.ServiceProvider);
+
+//await dataService.ManageDataAsync();
+
+//host.Run();
 
 app.Run();
