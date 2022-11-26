@@ -60,6 +60,7 @@ var app = builder.Build();
 
 
 var scope = app.Services.CreateScope();
+
 await DataHelper.ManageDataAsync(scope.ServiceProvider);
 
 // database update with the latest migrations
@@ -104,7 +105,7 @@ app.MapRazorPages();
 //var scope = app.Services.CreateScope();
 await DataHelper.ManageDataAsync(scope.ServiceProvider);
 
-await dataService.ManageDataAsync();
+//await dataService.ManageDataAsync();
 
 //host.Run();
 app.Run();
