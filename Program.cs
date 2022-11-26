@@ -20,10 +20,10 @@ builder.Services.AddControllers();
 
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
+//var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
 
-//var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultUI()
@@ -100,12 +100,11 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-//var app = CreateHostBuilder(args).Build();
-//var scope = app.Services.CreateScope();
-//await DataHelper.ManageDataAsync(scope.ServiceProvider);
+var app = CreateHostBuilder(args).Build();
+var scope = app.Services.CreateScope();
+await DataHelper.ManageDataAsync(scope.ServiceProvider);
 
-//await dataService.ManageDataAsync();
+await dataService.ManageDataAsync();
 
 //host.Run();
-
 app.Run();
