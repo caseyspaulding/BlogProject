@@ -11,18 +11,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using BlogProject.Helpers;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Adding controller support
-//builder.Services.AddControllers();
+builder.Services.AddControllers();
 
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-//var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
+var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
 
-var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+//var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                .AddDefaultUI()
@@ -53,9 +54,10 @@ builder.Services.AddScoped<IImageService, BasicImageService>();
 builder.Services.AddScoped<ISlugService, BasicSlugService>();
 //___________________________________________________________________
 //END OF CUSTOM SERVICES 
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 //Builds the web application
 var app = builder.Build();
+
 
 var scope = app.Services.CreateScope();
 await DataHelper.ManageDataAsync(scope.ServiceProvider);
@@ -70,21 +72,19 @@ var dataService = app.Services
 
 await dataService.ManageDateAsync();
 
-
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+    app.UseExceptionHandler("/Error");
+    //app.UseMigrationsEndPoint();
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-
 }
-//else
-//{
-//    app.UseExceptionHandler("/Home/Error");
-//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//    app.UseHsts();
-//}
+
 
 app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -97,6 +97,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Posts}/{action=BlogPostIndex}/{id?}");
+
 app.MapRazorPages();
 
 //var app = CreateHostBuilder(args).Build();
