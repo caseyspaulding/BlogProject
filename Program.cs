@@ -44,7 +44,6 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 builder.Services.AddScoped<IBlogEmailSender, EmailService>();
 
 
-
 //Register our Image Service
 builder.Services.AddScoped<IImageService, BasicImageService>();
 
@@ -53,6 +52,8 @@ builder.Services.AddScoped<ISlugService, BasicSlugService>();
 //___________________________________________________________________
 //END OF CUSTOM SERVICES 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+
 //Builds the web application
 var app = builder.Build();
 
