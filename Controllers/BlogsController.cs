@@ -73,7 +73,7 @@ public class BlogsController : Controller
     {  //incoming data from create form getting saved to database
         if (ModelState.IsValid)
         {
-            blog.Created = DateTime.Now;
+            blog.Created = DateTime.UtcNow;
             blog.BlogUserId = _userManager.GetUserId(User);
             blog.ImageData = await _imageService.EncodeImageAsync(blog.Image);
             blog.ContentType = _imageService.ContentType(blog.Image);
@@ -122,7 +122,7 @@ public class BlogsController : Controller
 
                 var newBlog = await _context.Blogs.FindAsync(blog.Id);
 
-                newBlog.Updated = DateTime.Now;
+                newBlog.Updated = DateTime.UtcNow;
 
                 if (newBlog.Name != blog.Name)
                 {

@@ -67,7 +67,9 @@
                 <h5 id="commentSection" class="comment-title py-4">@Model.Post.Comments.Count Comments</h5>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <form asp-action="Create" asp-controller="Comments" method="post">
+                    <form asp-action="Create"
+                    asp-controller="Comments" 
+                    method="post">
                         @Html.Hidden("PostId", Model.Post.Id)
                         @Html.Hidden("Slug", Model.Post.Slug)
 

@@ -122,7 +122,7 @@ public class PostsController : Controller
     {
         if (ModelState.IsValid)
         {
-            post.Created = DateTime.Now;
+            post.Created = DateTime.UtcNow;
 
             var authorId = _userManager.GetUserId(User);
             post.BlogUserId = authorId;
@@ -228,7 +228,7 @@ public class PostsController : Controller
                 // newpost is the originalPost..called newpost because its an edit
                 var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
 
-                newPost.Updated = DateTime.Now;
+                newPost.Updated = DateTime.UtcNow;
                 newPost.Title = post.Title;
                 newPost.Abstract = post.Abstract;
                 newPost.Content = post.Content;

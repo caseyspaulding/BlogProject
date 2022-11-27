@@ -44,18 +44,18 @@ public class CommentsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("PostId,Body")] Comment comment)
+    public async Task<IActionResult> Create(int Id,[Bind("PostId,Body")] Comment comment)
     {
         if (ModelState.IsValid)
         {
 
             comment.BlogUserId = _userManager.GetUserId(User);
-            comment.Created = DateTime.Now;
+            comment.Created = DateTime.UtcNow;
             _context.Add(comment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        
         return View(comment);
     }
 
@@ -96,7 +96,7 @@ public class CommentsController : Controller
             try
             {
                 newComment.Body = comment.Body;
-                newComment.Updated = DateTime.Now;
+                newComment.Updated = DateTime.UtcNow;
 
 
                 await _context.SaveChangesAsync();
@@ -137,7 +137,7 @@ public class CommentsController : Controller
                 newComment.ModeratedBody = comment.ModeratedBody;
                 newComment.ModerationType = comment.ModerationType;
 
-                newComment.Moderated = DateTime.Now;
+                newComment.Moderated = DateTime.UtcNow;
                 newComment.ModeratorId = _userManager.GetUserId(User);
 
                 await _context.SaveChangesAsync();
