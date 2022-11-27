@@ -20,6 +20,8 @@ body {
   color: rgba(var(--color-primary-rgb), 1);
 }
 
+
+
 a {
   color: var(--color-links);
   text-decoration: none;
@@ -1165,10 +1167,7 @@ section {
   font-size: 15px;
 }
 
-.contact .php-email-form input::focus,
-.contact .php-email-form textarea::focus {
-  background-color: var(--color-primary);
-}
+ 
 
 .contact .php-email-form button[type=submit] {
   background: var(--color-primary);

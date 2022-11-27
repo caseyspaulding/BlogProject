@@ -44,16 +44,32 @@ public class CommentsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(int Id,[Bind("PostId,Body")] Comment comment)
+    public async Task<IActionResult> Create([Bind("PostId,Body")] Comment comment)
     {
         if (ModelState.IsValid)
         {
-
-            comment.BlogUserId = _userManager.GetUserId(User);
-            comment.Created = DateTime.UtcNow;
-            _context.Add(comment);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var newComment = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
+            try
+            {
+                
+                comment.BlogUserId = _userManager.GetUserId(User);
+                comment.Created = DateTime.UtcNow;
+                _context.Add(comment);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommentExists(comment.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return View("Success");
+            //return RedirectToAction("Details", "Posts", new { slug = newComment?.Post.Slug }, "commentSection");
         }
         
         return View(comment);
