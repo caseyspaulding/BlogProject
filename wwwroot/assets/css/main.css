@@ -15,20 +15,6 @@
   scroll-behavior: smooth;
 }
 
-footer {
-    padding-right: .5rem;
-}
-
-    footer .social > a {
-        color: var(--white-color);
-    }
-
-.sticky-footer {
-    position: sticky;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-}
 
 body {
   color: rgba(var(--color-primary-rgb), 1);
