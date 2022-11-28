@@ -28,12 +28,12 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-//builder.Services.AddAuthentication()
-//    .AddTwitter(opts =>
-//    {
-//        opts.ConsumerKey = builder.Configuration["Po8o6wwQoUN1f0bkEfo9xAwCty"];
-//        opts.ConsumerSecret= builder.Configuration["u2c7kZ3QvnidxOVeVrKrv23plxmcl7hYvvKiBiwNY5RHe3tDbi"];
-//    });
+builder.Services.AddAuthentication()
+    .AddTwitter(opts =>
+    {
+        opts.ConsumerKey = "Po8o6wwQoUN1f0bkEfo9xAwCty";
+        opts.ConsumerSecret= "u2c7kZ3QvnidxOVeVrKrv23plxmcl7hYvvKiBiwNY5RHe3tDbi";
+    });
 
 builder.Services.AddControllersWithViews();
 
