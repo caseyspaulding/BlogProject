@@ -107,11 +107,8 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-//var app = CreateHostBuilder(args).Build();
-//var scope = app.Services.CreateScope();
+
 await DataHelper.ManageDataAsync(scope.ServiceProvider);
 
-//await dataService.ManageDataAsync();
 
-//host.Run();
 app.Run();
