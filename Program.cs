@@ -31,8 +31,8 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
 builder.Services.AddAuthentication()
     .AddTwitter(opts =>
     {
-        opts.ConsumerKey = builder.Configuration[key:"Authentication:Twitter:ApiKey"];
-        opts.ConsumerSecret= builder.Configuration[key: "Authentication:Twitter:ApiKeySecret"];
+        opts.ConsumerKey = builder.Configuration["Po8o6wwQoUN1f0bkEfo9xAwCty"];
+        opts.ConsumerSecret= builder.Configuration["u2c7kZ3QvnidxOVeVrKrv23plxmcl7hYvvKiBiwNY5RHe3tDbi"];
     });
 
 builder.Services.AddControllersWithViews();
