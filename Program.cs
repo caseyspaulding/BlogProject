@@ -28,6 +28,13 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddAuthentication()
+    .AddTwitter(opts =>
+    {
+        opts.ConsumerKey = builder.Configuration[key:"Authentication:Twitter:ApiKey"];
+        opts.ConsumerSecret= builder.Configuration[key: "Authentication:Twitter:ApiKeySecret"];
+    });
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
