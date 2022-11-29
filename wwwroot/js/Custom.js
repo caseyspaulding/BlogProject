@@ -1,5 +1,4 @@
-﻿
-let index = 0;
+﻿let index = 0;
 
 function AddTag() {
     //Get a reference to the TagEntry input element
@@ -107,18 +106,3 @@ $(document).ready(function () {
     $('.modal').modal('show');
 });
 
-
-FB.getLoginStatus(function (response) {
-    statusChangeCallback(response);
-});
-
-
-{
-    status: 'connected',
-        authResponse: {
-        accessToken: '...',
-            expiresIn: '...',
-                signedRequest: '...',
-                    userID: '...'
-    }
-}
