@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using BlogProject.Helpers;
 using System;
+using Microsoft.AspNetCore.Authentication.Twitter;
+using TwitterOptions = Microsoft.AspNetCore.Authentication.Twitter.TwitterOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,11 +30,18 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<ApplicationDbContext>();
 
+var services = builder.Services;
+var configuration = builder.Configuration;
 builder.Services.AddAuthentication()
-    .AddTwitter(opts =>
+    .AddMicrosoftAccount(microsoftOptions =>
     {
-        opts.ConsumerKey = "Po8o6wwQoUN1f0bkEfo9xAwCty";
-        opts.ConsumerSecret= "u2c7kZ3QvnidxOVeVrKrv23plxmcl7hYvvKiBiwNY5RHe3tDbi";
+        microsoftOptions.ClientId = "d9cc4224-0405-4305-a1c9-778698deb25f";
+        microsoftOptions.ClientSecret = "aspnet-BlogProject-48C3A131-B5D2-497E-B4BB-0783925C7F62";
+    })
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = "74931028186-4oaal9qvrsa22lnbj77aigj1duqd5467.apps.googleusercontent.com";
+        googleOptions.ClientSecret = "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";
     });
 
 builder.Services.AddControllersWithViews();
