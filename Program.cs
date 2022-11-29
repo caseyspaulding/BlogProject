@@ -22,7 +22,6 @@ builder.Services.AddControllers();
 
 //var connectionString = builder.Configuration.GetSection("pgSettings")["pgConnection"];
 
-
 var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
